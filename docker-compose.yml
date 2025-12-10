@@ -1,6 +1,6 @@
 services:
     zoffline:
-        image: zoffline/zoffline:latest
+        image: ghcr.io/fatsbrown/zoffline:latest
         build:
             context: .
             dockerfile: Dockerfile
