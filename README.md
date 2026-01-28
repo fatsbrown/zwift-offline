@@ -16,7 +16,7 @@ There are four ways with which to install and run zoffline depending on your pla
 <details><summary>Simplest (Windows only)</summary>
 To install zoffline on Windows:
 
-* Download the latest zoffline release from https://github.com/zoffline/zwift-offline/releases/latest
+* Download the latest zoffline release from https://github.com/fatsbrown/zwift-offline/releases/tag/zoffline-latest
 * If you are not running zoffline on the same PC that Zwift is running: create a ``server-ip.txt`` file in the ``storage`` directory containing the IP address of the PC running zoffline.
 * Run the downloaded zoffline.exe
   * Once run, zoffline will create a ``storage`` directory in the same folder it's in to store your Zwift progress.
@@ -53,7 +53,7 @@ zoffline can be installed on the same machine as Zwift or another local machine.
  
 * Install Docker
 * Create the docker container with:<br>
-  ``docker create --name zwift-offline -p 443:443 -p 80:80 -p 3024:3024/udp -p 3025:3025 -p 53:53/udp -v </path/to/host/storage>:/usr/src/app/zwift-offline/storage -e TZ=<timezone> zoffline/zoffline``
+  ``docker create --name zwift-offline -p 443:443 -p 80:80 -p 3024:3024/udp -p 3025:3025 -p 53:53/udp -v </path/to/host/storage>:/usr/src/app/zwift-offline/storage -e TZ=<timezone> ghcr.io/fatsbrown/zoffline``
   * You can optionally exclude ``-v </path/to/host/storage>:/usr/src/app/zwift-offline/storage`` if you don't care if your Zwift progress state is retained across zoffline updates (unlikely).
   * The path you pass to ``-v`` will likely need to be world readable and writable.
   * A list of valid ``<timezone>`` values (e.g. America/New_York) can be found [here](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).
@@ -71,7 +71,7 @@ zoffline can be installed on the same machine as Zwift or another local machine.
   ``` yaml
   services:
       zoffline:
-          image: zoffline/zoffline:latest
+          image: ghcr.io/fatsbrown/zoffline:latest
           container_name: zoffline
           environment:
               - TZ=Europe/London
