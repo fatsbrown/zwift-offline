@@ -874,43 +874,43 @@ def profile(username):
             return render_template("profile.html", username=current_user.username, uname=cred[0], passw=cred[1])
         username = request.form['username']
         password = request.form['password']
-        session = requests.session()
-        try:
-            access_token, refresh_token = online_sync.login(session, username, password)
+        with requests.session() as session:
             try:
-                if request.form.get("zwift_profile"):
-                    profile = online_sync.query(session, access_token, "api/profiles/me")
-                    profile_file = '%s/profile.bin' % profile_dir
-                    backup_file(profile_file)
-                    with open(profile_file, 'wb') as f:
-                        f.write(profile)
-                    login_request = login_pb2.LoginRequest()
-                    login_request.key = random.randbytes(16)
-                    login_response = login_pb2.LoginResponse()
-                    login_response.ParseFromString(online_sync.api_login(session, access_token, login_request))
-                    login_response_dict = MessageToDict(login_response, preserving_proto_field_name=True)
-                    if 'economy_config' in login_response_dict:
-                        economy_config_file = '%s/economy_config.txt' % profile_dir
-                        backup_file(economy_config_file)
-                        with open(economy_config_file, 'w') as f:
-                            json.dump(login_response_dict['economy_config'], f, indent=2)
-                if request.form.get("achievements"):
-                    achievements = online_sync.query(session, access_token, "achievement/loadPlayerAchievements")
-                    achievements_file = '%s/achievements.bin' % profile_dir
-                    backup_file(achievements_file)
-                    with open(achievements_file, 'wb') as f:
-                        f.write(achievements)
-                online_sync.logout(session, refresh_token)
-                if request.form.get("save_zwift"):
-                    encrypt_credentials(file, (username, password))
+                access_token, refresh_token = online_sync.login(session, username, password)
+                try:
+                    if request.form.get("zwift_profile"):
+                        profile = online_sync.query(session, access_token, "api/profiles/me")
+                        profile_file = '%s/profile.bin' % profile_dir
+                        backup_file(profile_file)
+                        with open(profile_file, 'wb') as f:
+                            f.write(profile)
+                        login_request = login_pb2.LoginRequest()
+                        login_request.key = random.randbytes(16)
+                        login_response = login_pb2.LoginResponse()
+                        login_response.ParseFromString(online_sync.api_login(session, access_token, login_request))
+                        login_response_dict = MessageToDict(login_response, preserving_proto_field_name=True)
+                        if 'economy_config' in login_response_dict:
+                            economy_config_file = '%s/economy_config.txt' % profile_dir
+                            backup_file(economy_config_file)
+                            with open(economy_config_file, 'w') as f:
+                                json.dump(login_response_dict['economy_config'], f, indent=2)
+                    if request.form.get("achievements"):
+                        achievements = online_sync.query(session, access_token, "achievement/loadPlayerAchievements")
+                        achievements_file = '%s/achievements.bin' % profile_dir
+                        backup_file(achievements_file)
+                        with open(achievements_file, 'wb') as f:
+                            f.write(achievements)
+                    online_sync.logout(session, refresh_token)
+                    if request.form.get("save_zwift"):
+                        encrypt_credentials(file, (username, password))
+                except Exception as exc:
+                    logger.warning('Zwift profile: %s' % repr(exc))
+                    flash("Error downloading profile.")
+                    return render_template("profile.html", username=current_user.username, uname=cred[0], passw=cred[1])
             except Exception as exc:
-                logger.warning('Zwift profile: %s' % repr(exc))
-                flash("Error downloading profile.")
-                return render_template("profile.html", username=current_user.username, uname=cred[0], passw=cred[1])
-        except Exception as exc:
-            logger.warning('online_sync.login: %s' % repr(exc))
-            flash("Invalid username or password.")
-            return render_template("profile.html", username=current_user.username)
+                logger.warning('online_sync.login: %s' % repr(exc))
+                flash("Invalid username or password.")
+                return render_template("profile.html", username=current_user.username)
         return redirect(url_for('settings', username=current_user.username))
     return render_template("profile.html", username=current_user.username, uname=cred[0], passw=cred[1])
 
@@ -2392,19 +2392,19 @@ def zwift_upload(player_id, activity):
         logger.info("zwift_credentials.bin missing, skip Zwift activity update")
         return
     username, password = decrypt_credentials(zwift_credentials)
-    try:
-        session = requests.session()
-        access_token, refresh_token = online_sync.login(session, username, password)
-        activity.player_id = online_sync.get_player_id(session, access_token)
-        new_activity = activity_pb2.Activity()
-        new_activity.CopyFrom(activity)
-        new_activity.ClearField('id')
-        new_activity.ClearField('fit')
-        activity.id = online_sync.create_activity(session, access_token, new_activity)
-        online_sync.upload_activity(session, access_token, activity)
-        online_sync.logout(session, refresh_token)
-    except Exception as exc:
-        logger.warning("Zwift upload failed. No internet? %s" % repr(exc))
+    with requests.session() as session:
+        try:
+            access_token, refresh_token = online_sync.login(session, username, password)
+            activity.player_id = online_sync.get_player_id(session, access_token)
+            new_activity = activity_pb2.Activity()
+            new_activity.CopyFrom(activity)
+            new_activity.ClearField('id')
+            new_activity.ClearField('fit')
+            activity.id = online_sync.create_activity(session, access_token, new_activity)
+            online_sync.upload_activity(session, access_token, activity)
+            online_sync.logout(session, refresh_token)
+        except Exception as exc:
+            logger.warning("Zwift upload failed. No internet? %s" % repr(exc))
 
 
 def moving_average(iterable, n):
