@@ -4110,7 +4110,22 @@ def api_fitness_fitness_goals_history():
 
 
 @app.route('/api/d-lock-service/device/authenticate', methods=['POST'])
+@jwt_to_session_cookie
+@login_required
 def api_d_lock_service_device_authenticate():
+    zwift_credentials = "%s/%s/zwift_credentials.bin" % (STORAGE_DIR, current_user.player_id)
+    if os.path.isfile(zwift_credentials):
+        username, password = decrypt_credentials(zwift_credentials)
+        with requests.session() as session:
+            try:
+                access_token, refresh_token = online_sync.login(session, username, password)
+                headers = dict(request.headers)
+                headers['Authorization'] = "Bearer %s" % access_token
+                response = session.post(url="https://us-or-rly101.zwift.com/api/d-lock-service/device/authenticate", headers=headers, data=request.stream.read())
+                online_sync.logout(session, refresh_token)
+                return response.content, response.status_code
+            except Exception as exc:
+                logger.warning("api_d_lock_service_device_authenticate: %s" % repr(exc))
     return '', 204
 
 
