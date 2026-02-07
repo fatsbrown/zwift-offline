@@ -161,6 +161,7 @@ map_override = {}
 climb_override = {}
 global_bookmarks = {}
 global_race_results = {}
+zwift_online_tokens = {}
 restarting = False
 restarting_in_minutes = 0
 reload_pacer_bots = False
@@ -1471,6 +1472,15 @@ def logout_player(player_id):
     if player_id in global_bookmarks:
         global_bookmarks[player_id].clear()
         global_bookmarks.pop(player_id)
+    if player_id in zwift_online_tokens:
+        tokens = zwift_online_tokens[player_id]
+        if 'refresh_token' in tokens:
+            with requests.session() as session:
+                try:
+                    online_sync.logout(session, tokens['refresh_token'])
+                except Exception as exc:
+                    logger.warning("logout_player: %s" % repr(exc))
+        zwift_online_tokens.pop(player_id)
 
 @app.route('/api/users/logout', methods=['POST'])
 @jwt_to_session_cookie
@@ -2386,25 +2396,36 @@ def intervals_upload(player_id, activity):
         logger.warning("Intervals.icu upload failed. No internet? %s" % repr(exc))
 
 
+def get_zwift_online_tokens(player_id):
+    if not player_id in zwift_online_tokens:
+        zwift_online_tokens[player_id] = {}
+    tokens = zwift_online_tokens[player_id]
+    if not 'access_token' in tokens or not tokens['access_token']:
+        tokens['access_token'] = None
+        zwift_credentials = "%s/%s/zwift_credentials.bin" % (STORAGE_DIR, player_id)
+        if os.path.isfile(zwift_credentials):
+            username, password = decrypt_credentials(zwift_credentials)
+            with requests.session() as session:
+                try:
+                    tokens['access_token'], tokens['refresh_token'] = online_sync.login(session, username, password)
+                except Exception as exc:
+                    logger.warning("get_zwift_online_tokens: %s" % repr(exc))
+    return tokens
+
 def zwift_upload(player_id, activity):
-    zwift_credentials = '%s/%s/zwift_credentials.bin' % (STORAGE_DIR, player_id)
-    if not os.path.exists(zwift_credentials):
-        logger.info("zwift_credentials.bin missing, skip Zwift activity update")
-        return
-    username, password = decrypt_credentials(zwift_credentials)
-    with requests.session() as session:
-        try:
-            access_token, refresh_token = online_sync.login(session, username, password)
-            activity.player_id = online_sync.get_player_id(session, access_token)
-            new_activity = activity_pb2.Activity()
-            new_activity.CopyFrom(activity)
-            new_activity.ClearField('id')
-            new_activity.ClearField('fit')
-            activity.id = online_sync.create_activity(session, access_token, new_activity)
-            online_sync.upload_activity(session, access_token, activity)
-            online_sync.logout(session, refresh_token)
-        except Exception as exc:
-            logger.warning("Zwift upload failed. No internet? %s" % repr(exc))
+    tokens = get_zwift_online_tokens(player_id)
+    if tokens['access_token']:
+        with requests.session() as session:
+            try:
+                activity.player_id = online_sync.get_player_id(session, tokens['access_token'])
+                new_activity = activity_pb2.Activity()
+                new_activity.CopyFrom(activity)
+                new_activity.ClearField('id')
+                new_activity.ClearField('fit')
+                activity.id = online_sync.create_activity(session, tokens['access_token'], new_activity)
+                online_sync.upload_activity(session, tokens['access_token'], activity)
+            except Exception as exc:
+                logger.warning("Zwift upload failed. No internet? %s" % repr(exc))
 
 
 def moving_average(iterable, n):
@@ -2465,6 +2486,7 @@ def activity_uploads(player_id, activity):
     runalyze_upload(player_id, activity)
     intervals_upload(player_id, activity)
     zwift_upload(player_id, activity)
+    logout_player(player_id)
 
 @app.route('/api/profiles/<int:player_id>/activities/<int:activity_id>', methods=['PUT', 'DELETE'])
 @jwt_to_session_cookie
@@ -2508,7 +2530,6 @@ def api_profiles_activities_id(player_id, activity_id):
     # Upload in separate thread to avoid client freezing if it takes longer than expected
     upload = threading.Thread(target=activity_uploads, args=(player_id, activity))
     upload.start()
-    logout_player(player_id)
     return response, 200
 
 @app.route('/api/profiles/<int:receiving_player_id>/activities/0/rideon', methods=['POST']) #activity_id Seem to always be 0, even when giving ride on to ppl with 30km+
@@ -4113,16 +4134,13 @@ def api_fitness_fitness_goals_history():
 @jwt_to_session_cookie
 @login_required
 def api_d_lock_service_device_authenticate():
-    zwift_credentials = "%s/%s/zwift_credentials.bin" % (STORAGE_DIR, current_user.player_id)
-    if os.path.isfile(zwift_credentials):
-        username, password = decrypt_credentials(zwift_credentials)
+    tokens = get_zwift_online_tokens(current_user.player_id)
+    if tokens['access_token']:
+        headers = dict(request.headers)
+        headers['Authorization'] = "Bearer %s" % tokens['access_token']
         with requests.session() as session:
             try:
-                access_token, refresh_token = online_sync.login(session, username, password)
-                headers = dict(request.headers)
-                headers['Authorization'] = "Bearer %s" % access_token
                 response = session.post(url="https://us-or-rly101.zwift.com/api/d-lock-service/device/authenticate", headers=headers, data=request.stream.read())
-                online_sync.logout(session, refresh_token)
                 return response.content, response.status_code
             except Exception as exc:
                 logger.warning("api_d_lock_service_device_authenticate: %s" % repr(exc))
