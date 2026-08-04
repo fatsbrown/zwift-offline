@@ -426,8 +426,8 @@
   },
   "-1375227966": {
     "name": "Makuri Islands - Mech Isle Mayhem",
-    "road": 129,
-    "time": 250890
+    "road": 128,
+    "time": 897000
   },
   "1453570384": {
     "name": "Makuri Islands - Neokyo All-Nighter",
@@ -521,8 +521,8 @@
   },
   "362278484": {
     "name": "Makuri Islands - Twilight Crit",
-    "road": 4,
-    "time": 873144
+    "road": 18,
+    "time": 690576
   },
   "1457923570": {
     "name": "Makuri Islands - Twilight Harbor",
@@ -536,8 +536,8 @@
   },
   "-202736804": {
     "name": "Makuri Islands - Urumaze",
-    "road": 129,
-    "time": 250890
+    "road": 128,
+    "time": 897000
   },
   "1941800093": {
     "name": "Makuri Islands - Valley to Mountaintop",
@@ -550,7 +550,7 @@
     "time": 297800
   },
   "811898717": {
-    "name": "Makuri Islands - WhatYumeziWereLost",
+    "name": "Makuri Islands - WhatYumeziWe'reLost?",
     "road": 0,
     "time": 907719
   },
@@ -1309,6 +1309,11 @@
     "road": 36,
     "time": 807569
   },
+  "136182452": {
+    "name": "Watopia - Mountain Mash Run",
+    "road": 36,
+    "time": 806437
+  },
   "-1328149290": {
     "name": "Watopia - Mountain Route",
     "road": 0,
@@ -1331,6 +1336,11 @@
   },
   "-762100323": {
     "name": "Watopia - Oh Hill No",
+    "road": 150,
+    "time": 70000
+  },
+  "-2113754818": {
+    "name": "Watopia - Oh Hill No Run",
     "road": 150,
     "time": 70000
   },
@@ -1424,6 +1434,11 @@
     "road": 149,
     "time": 587992
   },
+  "159415549": {
+    "name": "Watopia - Spiral Summit",
+    "road": 36,
+    "time": 791049
+  },
   "-1033799550": {
     "name": "Watopia - Spiral into the Volcano",
     "road": 0,
@@ -1453,6 +1468,11 @@
     "name": "Watopia - Temple Trek",
     "road": 35,
     "time": 316087
+  },
+  "1434769940": {
+    "name": "Watopia - Temple Trek Run",
+    "road": 35,
+    "time": 313245
   },
   "2128890027": {
     "name": "Watopia - Tempus Fugit",
@@ -1564,6 +1584,11 @@
     "road": 0,
     "time": 987930
   },
+  "482200332": {
+    "name": "Watopia - Two Bridges Loop Run",
+    "road": 0,
+    "time": 987930
+  },
   "686828068": {
     "name": "Watopia - Volcano Circuit",
     "road": 23,
@@ -1573,6 +1598,16 @@
     "name": "Watopia - Volcano Circuit CCW",
     "road": 23,
     "time": 791297
+  },
+  "802314860": {
+    "name": "Watopia - Volcano Circuit CCW Run",
+    "road": 23,
+    "time": 791178
+  },
+  "764410120": {
+    "name": "Watopia - Volcano Circuit Run",
+    "road": 23,
+    "time": 791178
   },
   "849508252": {
     "name": "Watopia - Volcano Climb",

@@ -135,7 +135,7 @@
   {
     "name": "Makuri Islands - Mech Isle Mayhem",
     "route": 2919739330,
-    "distance": 18422.6,
+    "distance": 20365.9,
     "course": 13,
     "sport": 0
   },
@@ -149,19 +149,19 @@
   {
     "name": "Makuri Islands - Twilight Crit",
     "route": 362278484,
-    "distance": 3969.7,
+    "distance": 5742.5,
     "course": 13,
     "sport": 0
   },
   {
     "name": "Makuri Islands - Urumaze",
     "route": 4092230492,
-    "distance": 24839.2,
+    "distance": 26781.0,
     "course": 13,
     "sport": 0
   },
   {
-    "name": "Makuri Islands - WhatYumeziWereLost",
+    "name": "Makuri Islands - WhatYumeziWe'reLost?",
     "route": 811898717,
     "distance": 17541.5,
     "course": 13,
@@ -339,6 +339,13 @@
     "name": "Watopia - Seaside Sprint",
     "route": 3454338139,
     "distance": 9253.1,
+    "course": 6,
+    "sport": 0
+  },
+  {
+    "name": "Watopia - Spiral Summit",
+    "route": 159415549,
+    "distance": 24019.9,
     "course": 6,
     "sport": 0
   },

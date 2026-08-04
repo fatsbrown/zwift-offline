@@ -391,18 +391,7 @@
       "value": true
     },
     {
-      "name": "game_1_114_next_up_quest_tag",
-      "value": true,
-      "values": {
-        "fields": {
-          "quest_tag_color_hex": {
-            "stringValue": "#2C2C33"
-          },
-          "quest_tag_text_color_hex": {
-            "stringValue": "#FCFCFC"
-          }
-        }
-      }
+      "name": "game_1_114_next_up_quest_tag"
     },
     {
       "name": "game_1_115_disable_empty_leaderboard",
@@ -441,10 +430,8 @@
       "name": "game_1_117_quest_card_countdown_ribbon"
     },
     {
-      "name": "game_1_117_steering_constraints_render_fix"
-    },
-    {
-      "name": "game_1_117_theater_card"
+      "name": "game_1_117_steering_constraints_render_fix",
+      "value": true
     },
     {
       "name": "game_1_118_poll_user_profile_fetch",
@@ -460,6 +447,35 @@
     },
     {
       "name": "game_1_118_wait_for_rpcs"
+    },
+    {
+      "name": "game_1_119_ble_characteristic_handlers",
+      "value": true,
+      "values": {
+        "fields": {
+          "exclusions": {
+            "stringValue": ""
+          }
+        }
+      }
+    },
+    {
+      "name": "game_1_119_ble_middleware_graceful_shutdown",
+      "value": true
+    },
+    {
+      "name": "game_1_119_membership_view"
+    },
+    {
+      "name": "game_1_119_noesis_touch_drag",
+      "value": true
+    },
+    {
+      "name": "game_1_119_purge_all_devices",
+      "value": true
+    },
+    {
+      "name": "game_1_120_disable_r2h_sleep_aware_clock"
     },
     {
       "name": "game_1_15_assert_disable_abort",
@@ -911,7 +927,7 @@
       "values": {
         "fields": {
           "enableMochiPackDynamics": {
-            "boolValue": false
+            "boolValue": true
           },
           "enabledForAllWorlds": {
             "boolValue": true
@@ -1012,10 +1028,6 @@
       "name": "game_1_75_bypass_zpe"
     },
     {
-      "name": "game_1_76_dont_hold_player_during_pairing_while_paused",
-      "value": true
-    },
-    {
       "name": "game_1_76_dpr"
     },
     {
@@ -1030,7 +1042,8 @@
       }
     },
     {
-      "name": "game_1_77_prevent_teleport_to_player_type"
+      "name": "game_1_77_prevent_teleport_to_player_type",
+      "value": true
     },
     {
       "name": "game_1_77_ttt_team_car_shows_znl_when_fanviewing",
@@ -1299,17 +1312,6 @@
       }
     },
     {
-      "name": "game_1_99_power_segment_arch",
-      "value": true,
-      "values": {
-        "fields": {
-          "lightning_effect": {
-            "boolValue": true
-          }
-        }
-      }
-    },
-    {
       "name": "game_ClassyJazzFlute"
     },
     {
@@ -1418,6 +1420,9 @@
           "CanyonAeroad_Alpecin_2026": {
             "boolValue": true
           },
+          "CanyonAeroad_CS_2026": {
+            "boolValue": true
+          },
           "CanyonAeroad_Green_2026": {
             "boolValue": true
           },
@@ -1470,6 +1475,9 @@
             "boolValue": true
           },
           "wilier_filante_2026": {
+            "boolValue": true
+          },
+          "wilier_psg_2026": {
             "boolValue": true
           }
         }
@@ -1563,13 +1571,13 @@
       "values": {
         "fields": {
           "world1": {
-            "stringValue": "tourfever2026"
+            "stringValue": "watchthefemmes2026"
           },
           "world10": {
-            "stringValue": "tourfever2026"
+            "stringValue": "watchthefemmes2026"
           },
           "world11": {
-            "stringValue": "tourfever2026"
+            "stringValue": "watchthefemmes2026"
           }
         }
       }
@@ -1599,7 +1607,7 @@
             "stringValue": "dlc_asset"
           },
           "build_id": {
-            "stringValue": "163822"
+            "stringValue": "164068"
           },
           "canary_test": {
             "boolValue": true
@@ -1666,7 +1674,8 @@
       "name": "game_hvc_telemetry"
     },
     {
-      "name": "game_instrumental_rock_bass"
+      "name": "game_instrumental_rock_bass",
+      "value": true
     },
     {
       "name": "game_lauterbrunnen"
@@ -1737,20 +1746,6 @@
       "value": true
     },
     {
-      "name": "game_off_route_path_prediction",
-      "value": true,
-      "values": {
-        "fields": {
-          "center": {
-            "boolValue": true
-          },
-          "minimap": {
-            "boolValue": true
-          }
-        }
-      }
-    },
-    {
       "name": "game_os_deprecation_warning",
       "value": true,
       "values": {
@@ -1763,6 +1758,9 @@
           }
         }
       }
+    },
+    {
+      "name": "game_patch_noesis_loc"
     },
     {
       "name": "game_prize_wheel_schedule",
@@ -1839,10 +1837,6 @@
       }
     },
     {
-      "name": "game_road_graph_in_game",
-      "value": true
-    },
-    {
       "name": "game_road_graph_on_route_in_game"
     },
     {
@@ -1851,7 +1845,7 @@
       "values": {
         "fields": {
           "version": {
-            "stringValue": "1.118.0"
+            "stringValue": "1.119.0"
           }
         }
       }
@@ -1861,17 +1855,6 @@
     },
     {
       "name": "game_sentry_screenshot_capture"
-    },
-    {
-      "name": "game_session_data",
-      "value": true,
-      "values": {
-        "fields": {
-          "ride_session_state": {
-            "boolValue": true
-          }
-        }
-      }
     },
     {
       "name": "game_show_about_menu",
@@ -2141,6 +2124,10 @@
           }
         }
       }
+    },
+    {
+      "name": "segment_complete_event",
+      "value": true
     },
     {
       "name": "unload_homescreen_before_game_load",
