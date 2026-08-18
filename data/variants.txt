@@ -44,26 +44,6 @@
       }
     },
     {
-      "name": "bikemodifiercalculator_params",
-      "value": true,
-      "values": {
-        "fields": {
-          "bUseDriveTrainEfficiency": {
-            "boolValue": false
-          },
-          "bUseHelmetCDA": {
-            "boolValue": false
-          },
-          "bUseSockCDA": {
-            "boolValue": true
-          },
-          "bUseTrainerSlopeScale": {
-            "boolValue": true
-          }
-        }
-      }
-    },
-    {
       "name": "download_entitlements_from_asset_cms"
     },
     {
@@ -282,10 +262,6 @@
       "name": "game_1_109_controllers_running"
     },
     {
-      "name": "game_1_109_disable_first_time_auto_pairing_and_selection",
-      "value": true
-    },
-    {
       "name": "game_1_109_gravel_mountain",
       "value": true,
       "values": {
@@ -427,7 +403,15 @@
       "name": "game_1_117_feature_gate_entitlements"
     },
     {
-      "name": "game_1_117_quest_card_countdown_ribbon"
+      "name": "game_1_117_quest_card_countdown_ribbon",
+      "value": true,
+      "values": {
+        "fields": {
+          "countdown_days_remaining_threshold": {
+            "varintValue": "7"
+          }
+        }
+      }
     },
     {
       "name": "game_1_117_steering_constraints_render_fix",
@@ -471,11 +455,25 @@
       "value": true
     },
     {
-      "name": "game_1_119_purge_all_devices",
+      "name": "game_1_119_purge_all_devices"
+    },
+    {
+      "name": "game_1_119_zero_media_selection",
+      "value": true
+    },
+    {
+      "name": "game_1_120_android_ui_callback_async_drain",
       "value": true
     },
     {
       "name": "game_1_120_disable_r2h_sleep_aware_clock"
+    },
+    {
+      "name": "game_1_120_fitfile_recovery"
+    },
+    {
+      "name": "game_1_120_ride_leader_emoji_name_support",
+      "value": true
     },
     {
       "name": "game_1_15_assert_disable_abort",
@@ -619,7 +617,7 @@
       "values": {
         "fields": {
           "excluded_collections": {
-            "stringValue": "\"Baby On Board\""
+            "stringValue": "Baby On Board"
           }
         }
       }
@@ -666,7 +664,8 @@
       "value": true
     },
     {
-      "name": "game_1_43_3_ble_dll_v2"
+      "name": "game_1_43_3_ble_dll_v2",
+      "value": true
     },
     {
       "name": "game_1_43_android_road_height_fixup"
@@ -912,7 +911,7 @@
       "values": {
         "fields": {
           "hero_carousel_id": {
-            "stringValue": "home_page_hero_carousel_prod"
+            "stringValue": "home_page_hero_carousel_119"
           }
         }
       }
@@ -1005,7 +1004,7 @@
       "values": {
         "fields": {
           "challenge_carousel_id": {
-            "stringValue": "prod_home_challenge_carousel_1_116"
+            "stringValue": "prod_home_challenge_carousel_1_119"
           }
         }
       }
@@ -1016,9 +1015,6 @@
     {
       "name": "game_1_72_fence_test_2024_08",
       "value": true
-    },
-    {
-      "name": "game_1_72_reset_route_manager_on_logout"
     },
     {
       "name": "game_1_74_intersection_level_lock_override_by_route",
@@ -1231,21 +1227,7 @@
       }
     },
     {
-      "name": "game_1_92_robo_pacer_custom_skin",
-      "value": true,
-      "values": {
-        "fields": {
-          "BodyTextureName": {
-            "stringValue": "RPBodyTourFever2026_DM.tga"
-          },
-          "GlowTextureName": {
-            "stringValue": "Glow_TourFever.tga"
-          },
-          "LimbsTextureName": {
-            "stringValue": "RPLimbsTourFever2026_DM.tga"
-          }
-        }
-      }
+      "name": "game_1_92_robo_pacer_custom_skin"
     },
     {
       "name": "game_1_95_allow_zc_unpairing_devices_in_connecting_state",
@@ -1253,10 +1235,6 @@
     },
     {
       "name": "game_1_95_post_recommended_activity_survey"
-    },
-    {
-      "name": "game_1_95_prevent_pairing_of_already_paired_ble_devices",
-      "value": true
     },
     {
       "name": "game_1_96_info_highlight",
@@ -1468,6 +1446,30 @@
           "roval_rapide_clx_rear_wheel": {
             "boolValue": true
           },
+          "shimano_duraace_c362026_front_wheel": {
+            "boolValue": true
+          },
+          "shimano_duraace_c362026_rear_wheel": {
+            "boolValue": true
+          },
+          "shimano_duraace_c502026_front_wheel": {
+            "boolValue": true
+          },
+          "shimano_duraace_c502026_rear_wheel": {
+            "boolValue": true
+          },
+          "shimano_duraace_c602026_front_wheel": {
+            "boolValue": true
+          },
+          "shimano_duraace_c602026_rear_wheel": {
+            "boolValue": true
+          },
+          "shimano_duraace_c992026_front_wheel": {
+            "boolValue": true
+          },
+          "shimano_duraace_c992026_rear_wheel": {
+            "boolValue": true
+          },
           "specialized_tarmac_sl9_2026": {
             "boolValue": true
           },
@@ -1489,9 +1491,6 @@
     {
       "name": "game_aeroribbon",
       "value": true
-    },
-    {
-      "name": "game_allow_bc1_memfault_reporting"
     },
     {
       "name": "game_alpe_du_zwift_prize_wheel_override",
@@ -1566,21 +1565,7 @@
       "value": true
     },
     {
-      "name": "game_default_deco",
-      "value": true,
-      "values": {
-        "fields": {
-          "world1": {
-            "stringValue": "watchthefemmes2026"
-          },
-          "world10": {
-            "stringValue": "watchthefemmes2026"
-          },
-          "world11": {
-            "stringValue": "watchthefemmes2026"
-          }
-        }
-      }
+      "name": "game_default_deco"
     },
     {
       "name": "game_disable_cached_subgroup_protobuf",
@@ -1607,7 +1592,7 @@
             "stringValue": "dlc_asset"
           },
           "build_id": {
-            "stringValue": "164068"
+            "stringValue": "164644"
           },
           "canary_test": {
             "boolValue": true
@@ -1837,6 +1822,9 @@
       }
     },
     {
+      "name": "game_quest_banner"
+    },
+    {
       "name": "game_road_graph_on_route_in_game"
     },
     {
@@ -1845,7 +1833,7 @@
       "values": {
         "fields": {
           "version": {
-            "stringValue": "1.119.0"
+            "stringValue": "1.120.0"
           }
         }
       }
@@ -2007,7 +1995,7 @@
       "values": {
         "fields": {
           "bRememberLastEquippedWheel": {
-            "boolValue": false
+            "boolValue": true
           },
           "bRememberSavedPaintHue": {
             "boolValue": true

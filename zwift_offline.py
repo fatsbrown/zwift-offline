@@ -1699,6 +1699,7 @@ def api_clubs_club_my_clubs_summary():
 @app.route('/api/workout/progress', methods=['POST'])
 @app.route('/api/power-curve/power-profile/proto', methods=['GET'])
 @app.route('/api/achievement/route-completion-achievements', methods=['GET'])  # TODO
+@app.route('/api/coach/public/plan-settings', methods=['GET'])
 def api_proto_empty():
     return '', 200
 
