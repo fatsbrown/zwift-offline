@@ -1034,6 +1034,11 @@
     "road": 0,
     "time": 987941
   },
+  "-1106593263": {
+    "name": "Watopia - Beach Island Loop Run",
+    "road": 0,
+    "time": 987941
+  },
   "1917017591": {
     "name": "Watopia - Big Flat 8",
     "road": 81,
@@ -1169,6 +1174,11 @@
     "road": 0,
     "time": 987495
   },
+  "-1033345835": {
+    "name": "Watopia - Flat Route Run",
+    "road": 0,
+    "time": 12380
+  },
   "-1416786329": {
     "name": "Watopia - Four Horsemen",
     "road": 0,
@@ -1266,6 +1276,11 @@
   },
   "243949867": {
     "name": "Watopia - Loop de Loop",
+    "road": 0,
+    "time": 987894
+  },
+  "-1839271769": {
+    "name": "Watopia - Loop de Loop Run",
     "road": 0,
     "time": 987894
   },
@@ -1628,6 +1643,11 @@
     "name": "Watopia - Volcano Flat Reverse",
     "road": 0,
     "time": 985726
+  },
+  "-997234195": {
+    "name": "Watopia - Volcano Flat Run",
+    "road": 0,
+    "time": 12178
   },
   "-2076558014": {
     "name": "Watopia - WBR Climbing Series",
