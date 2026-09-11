@@ -3,7 +3,9 @@ name: pyinstaller
 on:
   push:
     branches:
-      - master
+      - 'master'
+    tags:
+      - '*'
 
 jobs:
   build:
@@ -42,24 +44,27 @@ jobs:
       run: |
         pyinstaller standalone.spec
 
-    - name: Create zip
-      run: |
-        Compress-Archive -Path .\dist\* -DestinationPath .\zoffline-latest.zip
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        path: dist/*
 
-    - name: Update tag and release
+    - name: Create release
+      if: startsWith(github.ref, 'refs/tags/')
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        TAG_NAME: ${{ github.ref_name }}
       shell: bash
       run: |
-        git config user.name "github-actions[bot]"
-        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-        git tag -f zoffline-latest
-        git push origin zoffline-latest --force
         VERSION=$(xmllint --xpath "string(//Zwift/@sversion)" cdn/gameassets/Zwift_Updates_Root/Zwift_ver_cur.xml)
         cat << EOF > notes.md
         zoffline Windows only standalone executable for Zwift $VERSION.
 
         Note: The executable is made with pyinstaller. An unfortunate side effect is that some anti-virus software may falsely flag pyinstaller executables as malware. This is a [known issue](https://github.com/pyinstaller/pyinstaller/issues?q=is%3Aissue%20label%3Aantivirus-false-positives) and unavoidable. If you prefer, you can not use this exe and instead run zoffline directly from the source code (2nd installation method in the README).
         EOF
-        gh release edit zoffline-latest --title "zoffline for Zwift $VERSION" --notes-file notes.md
-        gh release upload zoffline-latest zoffline-latest.zip --clobber
+        if gh release view "$TAG_NAME" >/dev/null 2>&1; then
+          gh release edit "$TAG_NAME" --title "zoffline for Zwift $VERSION" --notes-file notes.md
+        else
+          gh release create "$TAG_NAME" --title "zoffline for Zwift $VERSION" --notes-file notes.md
+        fi
+        gh release upload "$TAG_NAME" dist/* --clobber
