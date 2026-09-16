@@ -1,3 +1,4 @@
+```yaml
 name: pyinstaller
 
 on:
@@ -12,21 +13,30 @@ jobs:
       fail-fast: false
 
     steps:
-    - uses: actions/checkout@v7
-    - uses: actions/setup-python@v7
-      with:
-        python-version: '3.14.7'
+      - uses: actions/checkout@v7
 
-    - uses: engineerd/configurator@v0.0.10
-      with:
-        name: "upx.exe"
-        url: "https://github.com/upx/upx/releases/download/v5.2.1/upx-5.2.1-win64.zip"
-        pathInArchive: "upx-5.2.1-win64/upx.exe"
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.14.7'
 
-    - run: pip install -r requirements.txt
-    - run: pip install pyinstaller garth==0.8.0
-    - run: pyinstaller standalone.spec
+      - name: Install UPX
+        shell: pwsh
+        run: |
+          $url = "https://github.com/upx/upx/releases/download/v5.2.1/upx-5.2.1-win64.zip"
+          $zip = "$env:RUNNER_TEMP\upx.zip"
+          $dir = "$env:RUNNER_TEMP\upx"
 
-    - uses: actions/upload-artifact@v7.0.1
-      with:
-        path: dist/*
+          Invoke-WebRequest -Uri $url -OutFile $zip
+          Expand-Archive -Path $zip -DestinationPath $dir -Force
+
+          Copy-Item "$dir\upx-5.2.1-win64\upx.exe" "$env:RUNNER_TEMP\upx.exe"
+          echo "$env:RUNNER_TEMP" >> $env:GITHUB_PATH
+
+      - run: pip install -r requirements.txt
+      - run: pip install pyinstaller garth==0.8.0
+      - run: pyinstaller standalone.spec
+
+      - uses: actions/upload-artifact@v7.0.1
+        with:
+          path: dist/*
+```
