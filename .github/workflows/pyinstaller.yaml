@@ -3,13 +3,17 @@ name: pyinstaller
 on:
   push:
     branches:
-      - master
+      - 'master'
+    tags:
+      - '*'
 
 jobs:
   build:
     runs-on: windows-latest
     strategy:
       fail-fast: false
+    permissions:
+      contents: write
 
     steps:
       - uses: actions/checkout@v7

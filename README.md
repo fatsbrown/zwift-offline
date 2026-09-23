@@ -1,6 +1,12 @@
 # zoffline
 Testing hmmm
 
+> [!NOTE]
+> **Changes in this fork (open pull requests in the main repo)**
+> * Updated to the latest version of Zwift and Launcher ([#522](https://github.com/zoffline/zwift-offline/pull/522))
+> * Added an option to upload activities and screenshots to Strava without an active paid subscription ([#529](https://github.com/zoffline/zwift-offline/pull/529))
+> * Fixed an issue where an activity uploaded to Intervals.icu would create a duplicate if paired to a synced workout ([#536](https://github.com/zoffline/zwift-offline/pull/536))
+
 zoffline enables the use of [Zwift](http://zwift.com) offline by acting as a partial implementation of a Zwift server. By default zoffline is only for a single player. See [Step 6: Enable Multiplayer](#step-6-optional-enable-multiplayer) for how to enable support for multiple users/profiles.
 
 zoffline also offers riding against ghosts (your previous rides). Enable this feature by checking "Enable ghosts" in zoffline's launcher. See [Extra features](#extra-features) for more details.
@@ -17,7 +23,7 @@ There are four ways with which to install and run zoffline depending on your pla
 <details><summary>Simplest (Windows only)</summary>
 To install zoffline on Windows:
 
-* Download the latest zoffline release from https://github.com/fatsbrown/zwift-offline/releases/tag/zoffline-latest
+* Download the latest zoffline release from https://github.com/fatsbrown/zwift-offline/releases/latest
 * If you are not running zoffline on the same PC that Zwift is running: create a ``server-ip.txt`` file in the ``storage`` directory containing the IP address of the PC running zoffline.
 * Run the downloaded zoffline.exe
   * Once run, zoffline will create a ``storage`` directory in the same folder it's in to store your Zwift progress.
