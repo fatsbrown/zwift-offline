@@ -61,6 +61,7 @@ import playback_pb2
 import user_storage_pb2
 import fitness_pb2
 import structured_events_pb2
+import route_completion_achievement_pb2
 
 import online_sync
 import intervals_workouts
@@ -1649,7 +1650,6 @@ def api_clubs_club_my_clubs_summary():
 @app.route('/api/game-asset-patching-service/manifest', methods=['GET'])
 @app.route('/api/workout/progress', methods=['POST'])
 @app.route('/api/power-curve/power-profile/proto', methods=['GET'])
-@app.route('/api/achievement/route-completion-achievements', methods=['GET'])  # TODO
 @app.route('/api/coach/public/plan-settings', methods=['GET'])
 def api_proto_empty():
     return '', 200
@@ -3941,6 +3941,76 @@ def api_route_results_completion_stats_all():
     page_count = math.ceil(len(stats) / page_size)
     response = {"response": {"stats": current_page}, "hasPreviousPage": page > 0, "hasNextPage": page < page_count - 1, "pageCount": page_count}
     return jsonify(response)
+
+# Newer clients only track route badges through this catalog: without it a completed route is ignored ("catalog-not-loaded")
+def load_route_completion_catalog():
+    with open(os.path.join(SCRIPT_DIR, "data", "game_info.txt"), encoding="utf-8-sig") as f:
+        game_info = json.load(f)
+    catalog = []
+    for m in game_info['maps']:
+        for r in m['routes']:
+            for s in r['sports']:
+                sport = route_completion_achievement_pb2.AchievementSport.Value('ACHIEVEMENT_SPORT_' + s)
+                achievement_uuid = str(uuid.uuid5(uuid.NAMESPACE_URL, 'zoffline/route-completion/%s/%s' % (r['id'], s)))
+                catalog.append({'uuid': achievement_uuid, 'route_hash': r['id'], 'sport': sport, 'xp': r.get('xp', 0), 'name': r['name'], 'first_sport': s == r['sports'][0]})
+    return catalog
+
+ROUTE_COMPLETION_CATALOG = load_route_completion_catalog()
+
+def route_completion_unlocks_file(player_id):
+    return os.path.join(STORAGE_DIR, str(player_id), 'route_completion_achievements.bin')
+
+@app.route('/api/achievement/route-completion-achievements', methods=['GET'])
+@jwt_to_session_cookie
+@login_required
+def api_achievement_route_completion_achievements():
+    player_id = current_user.player_id
+    unlocked_uuids = set()
+    unlocks_file = route_completion_unlocks_file(player_id)
+    if os.path.isfile(unlocks_file):
+        unlocks = route_completion_achievement_pb2.RouteCompletionAchievementUnlockRequest()
+        with open(unlocks_file, 'rb') as f:
+            unlocks.ParseFromString(f.read())
+        unlocked_uuids.update(unlocks.achievement_uuids)
+    # route results are stored with profile Sport (CYCLING = 0), achievement sports start at 1
+    completed = {(r.route_hash, r.sport + 1) for r in db.session.execute(sqlalchemy.text("SELECT DISTINCT route_hash, coalesce(sport, 0) AS sport FROM route_result WHERE player_id = :p"), {"p": player_id})}
+    # legacy route badges (e.g. imported from online) don't have a sport, credit the route's primary sport
+    badge_routes = set()
+    achievements_file = os.path.join(STORAGE_DIR, str(player_id), 'achievements.bin')
+    if os.path.isfile(achievements_file):
+        achievements = profile_pb2.Achievements()
+        with open(achievements_file, 'rb') as f:
+            achievements.ParseFromString(f.read())
+        badge_routes = {GD['achievements'][a.id] for a in achievements.achievements if a.id in GD['achievements']}
+    response = route_completion_achievement_pb2.LoadPlayerRouteCompletionAchievementsResponse()
+    for c in ROUTE_COMPLETION_CATALOG:
+        a = response.achievements.add()
+        a.achievement_uuid = c['uuid']
+        a.route_hash = c['route_hash']
+        a.sport = c['sport']
+        a.bonus_xp = c['xp']
+        a.display_title = c['name']
+        a.analytics_name = c['name']
+        a.unlocked = c['uuid'] in unlocked_uuids or (c['route_hash'], c['sport']) in completed or (c['first_sport'] and c['route_hash'] in badge_routes)
+    return response.SerializeToString(), 200
+
+@app.route('/api/achievement/route-completion-achievement-unlocks', methods=['POST'])
+@jwt_to_session_cookie
+@login_required
+def api_achievement_route_completion_achievement_unlocks():
+    new = route_completion_achievement_pb2.RouteCompletionAchievementUnlockRequest()
+    new.ParseFromString(request.stream.read())
+    unlocks_file = route_completion_unlocks_file(current_user.player_id)
+    unlocks = route_completion_achievement_pb2.RouteCompletionAchievementUnlockRequest()
+    if os.path.isfile(unlocks_file):
+        with open(unlocks_file, 'rb') as f:
+            unlocks.ParseFromString(f.read())
+    for achievement_uuid in new.achievement_uuids:
+        if achievement_uuid not in unlocks.achievement_uuids:
+            unlocks.achievement_uuids.append(achievement_uuid)
+    with open(unlocks_file, 'wb') as f:
+        f.write(unlocks.SerializeToString())
+    return '', 202
 
 @app.route('/api/race-results', methods=['POST'])
 @jwt_to_session_cookie

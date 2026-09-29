@@ -1,0 +1,26 @@
+syntax = "proto2";
+
+enum AchievementSport {
+    ACHIEVEMENT_SPORT_UNSPECIFIED = 0;
+    ACHIEVEMENT_SPORT_CYCLING = 1;
+    ACHIEVEMENT_SPORT_RUNNING = 2;
+    ACHIEVEMENT_SPORT_ROWING = 3;
+}
+
+message RouteCompletionAchievement {
+    optional string achievement_uuid = 1;
+    optional uint64 route_hash = 2;
+    optional AchievementSport sport = 3;
+    optional uint32 bonus_xp = 4;
+    optional string display_title = 5;
+    optional string analytics_name = 6;
+    optional bool unlocked = 7;
+}
+
+message LoadPlayerRouteCompletionAchievementsResponse {
+    repeated RouteCompletionAchievement achievements = 1;
+}
+
+message RouteCompletionAchievementUnlockRequest {
+    repeated string achievement_uuids = 1;
+}
