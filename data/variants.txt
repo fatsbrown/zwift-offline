@@ -47,6 +47,9 @@
       }
     },
     {
+      "name": "bishop_banner"
+    },
+    {
       "name": "download_entitlements_from_asset_cms"
     },
     {
@@ -178,8 +181,7 @@
       "value": true
     },
     {
-      "name": "game_1_102_unpair_all_devices",
-      "value": true
+      "name": "game_1_102_unpair_all_devices"
     },
     {
       "name": "game_1_103_fill_right_hand_rewards_page",
@@ -331,9 +333,6 @@
       "value": true
     },
     {
-      "name": "game_1_110_trial_banner"
-    },
-    {
       "name": "game_1_111_personalize_experience"
     },
     {
@@ -378,6 +377,9 @@
       "value": true
     },
     {
+      "name": "game_1_115_wattlock"
+    },
+    {
       "name": "game_1_116_deprecate_wahoo_ant_burst_mode",
       "value": true
     },
@@ -410,7 +412,7 @@
       "values": {
         "fields": {
           "backed_by_jwt": {
-            "boolValue": false
+            "boolValue": true
           },
           "drop_in_world": {
             "boolValue": true
@@ -466,7 +468,21 @@
       "value": true
     },
     {
-      "name": "game_1_119_membership_view"
+      "name": "game_1_119_membership_view",
+      "value": true,
+      "values": {
+        "fields": {
+          "is_change_plan_action_enabled": {
+            "boolValue": false
+          },
+          "is_resume_action_enabled": {
+            "boolValue": true
+          },
+          "is_subscribe_action_enabled": {
+            "boolValue": false
+          }
+        }
+      }
     },
     {
       "name": "game_1_119_noesis_touch_drag",
@@ -478,6 +494,14 @@
     },
     {
       "name": "game_1_119_zero_media_selection",
+      "value": true
+    },
+    {
+      "name": "game_1_120_android_anr_sentry_improvements",
+      "value": true
+    },
+    {
+      "name": "game_1_120_android_sentry_tracing_cached_class",
       "value": true
     },
     {
@@ -525,6 +549,9 @@
       "name": "game_1_121_see_rewards_button"
     },
     {
+      "name": "game_1_122_hide_route_difficulty_rating"
+    },
+    {
       "name": "game_1_122_pairing_options",
       "value": true
     },
@@ -535,6 +562,25 @@
     {
       "name": "game_1_122_workout_route_duration",
       "value": true
+    },
+    {
+      "name": "game_1_123_clear_devices_on_shutdown",
+      "value": true
+    },
+    {
+      "name": "game_1_123_fit_file_hardening",
+      "value": true
+    },
+    {
+      "name": "game_1_123_prevent_unwanted_ble_reconnect_on_apple",
+      "value": true
+    },
+    {
+      "name": "game_1_123_zsignal_fix",
+      "value": true
+    },
+    {
+      "name": "game_1_124_any_point_route_completion"
     },
     {
       "name": "game_1_17_noesis_enabled",
@@ -704,8 +750,7 @@
       }
     },
     {
-      "name": "game_1_42_teleport_deprecate_pedalassist_state",
-      "value": true
+      "name": "game_1_42_teleport_deprecate_pedalassist_state"
     },
     {
       "name": "game_1_43_3_ble_dll_v2",
@@ -1067,10 +1112,6 @@
       "value": true
     },
     {
-      "name": "game_1_78_zp_sh",
-      "value": true
-    },
-    {
       "name": "game_1_79_category_enforcement_event_join",
       "value": true
     },
@@ -1185,10 +1226,6 @@
       "value": true
     },
     {
-      "name": "game_1_91_zp_auth",
-      "value": true
-    },
-    {
       "name": "game_1_92_climb_portal_xp_exploit",
       "value": true,
       "values": {
@@ -1211,7 +1248,21 @@
       }
     },
     {
-      "name": "game_1_92_robo_pacer_custom_skin"
+      "name": "game_1_92_robo_pacer_custom_skin",
+      "value": true,
+      "values": {
+        "fields": {
+          "BodyTextureName": {
+            "stringValue": "RPBody_TourOfWatopia2026_DM.tga"
+          },
+          "GlowTextureName": {
+            "stringValue": "Glow_C.tga"
+          },
+          "LimbsTextureName": {
+            "stringValue": "RPLimbs_TourOfWatopia2026_DM.tga"
+          }
+        }
+      }
     },
     {
       "name": "game_1_95_post_recommended_activity_survey"
@@ -1371,91 +1422,28 @@
       "value": true,
       "values": {
         "fields": {
-          "CanyonAeroad_Alpecin_2026": {
-            "boolValue": true
-          },
-          "CanyonAeroad_CS_2026": {
-            "boolValue": true
-          },
           "CanyonAeroad_Green_2026": {
             "boolValue": true
           },
-          "cadex_max50_front_wheel": {
+          "QuintanaRooVPri_2026": {
             "boolValue": true
           },
-          "cadex_max50_rear_wheel": {
+          "black_threezero_inc2026_front_wheel": {
             "boolValue": true
           },
-          "canyon_speedmax_cfr_2026": {
+          "black_threezero_inc2026_rear_wheel": {
             "boolValue": true
           },
-          "cervelo_s5_2026": {
+          "cannondale_superslice_2026": {
             "boolValue": true
           },
-          "dt_swiss_arc_wheels": {
+          "factor_hanzo_2026": {
             "boolValue": true
           },
-          "giant_propel_2026": {
+          "giant_trinity_advanced_sl_2026": {
             "boolValue": true
           },
-          "miche_deva_rd62_front_wheel": {
-            "boolValue": true
-          },
-          "miche_deva_rd62_rear_wheel": {
-            "boolValue": true
-          },
-          "reserve_34_front_wheel": {
-            "boolValue": true
-          },
-          "reserve_34_rear_wheel": {
-            "boolValue": true
-          },
-          "reserve_57_front_wheel": {
-            "boolValue": true
-          },
-          "reserve_57_rear_wheel": {
-            "boolValue": true
-          },
-          "roval_rapide_clx_front_wheel": {
-            "boolValue": true
-          },
-          "roval_rapide_clx_rear_wheel": {
-            "boolValue": true
-          },
-          "shimano_duraace_c362026_front_wheel": {
-            "boolValue": true
-          },
-          "shimano_duraace_c362026_rear_wheel": {
-            "boolValue": true
-          },
-          "shimano_duraace_c502026_front_wheel": {
-            "boolValue": true
-          },
-          "shimano_duraace_c502026_rear_wheel": {
-            "boolValue": true
-          },
-          "shimano_duraace_c602026_front_wheel": {
-            "boolValue": true
-          },
-          "shimano_duraace_c602026_rear_wheel": {
-            "boolValue": true
-          },
-          "shimano_duraace_c992026_front_wheel": {
-            "boolValue": true
-          },
-          "shimano_duraace_c992026_rear_wheel": {
-            "boolValue": true
-          },
-          "specialized_tarmac_sl9_2026": {
-            "boolValue": true
-          },
-          "supersixevo_2026": {
-            "boolValue": true
-          },
-          "wilier_filante_2026": {
-            "boolValue": true
-          },
-          "wilier_psg_2026": {
+          "liv_avow_advanced_sl_2026": {
             "boolValue": true
           }
         }
@@ -1491,10 +1479,14 @@
       "values": {
         "fields": {
           "branch_prefix": {
-            "stringValue": "art/"
+            "stringValue": "art/,data/fall-26-early-access-build"
           }
         }
       }
+    },
+    {
+      "name": "game_average_power_fix",
+      "value": true
     },
     {
       "name": "game_barun"
@@ -1528,7 +1520,14 @@
     },
     {
       "name": "game_default_deco",
-      "value": true
+      "value": true,
+      "values": {
+        "fields": {
+          "world1": {
+            "stringValue": "tourofwatopia2026"
+          }
+        }
+      }
     },
     {
       "name": "game_disable_end_ride_delete_snapshot_fix"
@@ -1551,7 +1550,7 @@
             "stringValue": "dlc_asset"
           },
           "build_id": {
-            "stringValue": "165957"
+            "stringValue": "166686"
           },
           "canary_test": {
             "boolValue": true
@@ -1671,35 +1670,7 @@
       "name": "game_log_rssi"
     },
     {
-      "name": "game_mochi",
-      "values": {
-        "fields": {
-          "config": {
-            "stringValue": "{}"
-          },
-          "entitlement_mode": {
-            "stringValue": "mochi"
-          },
-          "manifest": {
-            "stringValue": "{}"
-          },
-          "recommended_video": {
-            "stringValue": "lochlong_1440"
-          },
-          "server_address": {
-            "stringValue": "https://rlcpmryhtpcsqfgd.dev-gs.zwift.com"
-          },
-          "showDLCTab": {
-            "boolValue": false
-          },
-          "tidy_streaming": {
-            "boolValue": true
-          },
-          "use_parallel_download": {
-            "boolValue": true
-          }
-        }
-      }
+      "name": "game_mochi"
     },
     {
       "name": "game_mochi_performance"
@@ -1730,7 +1701,8 @@
       "value": true
     },
     {
-      "name": "game_patch_noesis_loc"
+      "name": "game_patch_noesis_loc",
+      "value": true
     },
     {
       "name": "game_prize_wheel_schedule",
@@ -1818,7 +1790,7 @@
       "values": {
         "fields": {
           "version": {
-            "stringValue": "1.122.0"
+            "stringValue": "1.123.0"
           }
         }
       }
@@ -1856,6 +1828,9 @@
       }
     },
     {
+      "name": "game_support_zp_sensor"
+    },
+    {
       "name": "game_target_power_segment"
     },
     {
@@ -1879,7 +1854,7 @@
             "numberValue": 2.0
           },
           "tow_end": {
-            "varintValue": "1794758400"
+            "varintValue": "1794855600"
           },
           "tow_start": {
             "varintValue": "1791212400"
