@@ -264,15 +264,7 @@ To obtain your current profile:
 
 <details><summary>Android (non-rooted device)</summary>
 
-* Install apk-mitm (https://github.com/shroudedcode/apk-mitm)
-* [OPTIONAL] To enable the fitness widget, install Apktool (https://github.com/iBotPeaches/Apktool)
-  * Run ``apktool d zca.apk -o zca_decoded``
-  * Edit ``zca_decoded/res/xml/remote_config_defaults.xml`` changing ``react_native_fitness_view`` to ``true``
-  * Run ``apktool b zca_decoded -o zca.apk``
-* Copy the file [ssl/cert-zwift-com.pem](https://github.com/zoffline/zwift-offline/raw/master/ssl/cert-zwift-com.pem) in this repo and the Zwift Companion apk (e.g. ``zca.apk``) to a known location
-* Open Command Prompt, cd to that location and run
-  * ``apk-mitm --certificate cert-zwift-com.pem zca.apk``
-* Copy ``zca-patched.apk`` to your phone and install it
+* Download and install the patched apk from [here](https://github.com/fatsbrown/zoffline-companion/releases/latest) (or [patch it yourself](https://github.com/fatsbrown/zoffline-companion#patch-it-yourself))
 * Download and install ``app-Github-release.apk`` from [here](https://github.com/x-falcon/Virtual-Hosts/releases/latest)
 * Create a ``hosts.txt`` file to use with the app (you could use a text editor app or create it online with an online tool such as [this](https://passwordsgenerator.net/text-editor/)). The file must look like this (replace ``<zoffline ip>`` with the IP address of the machine running zoffline):
   ```
