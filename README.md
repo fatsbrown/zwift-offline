@@ -7,6 +7,7 @@
 > * Fixed an issue where an activity uploaded to Intervals.icu would create a duplicate if paired to a synced workout ([#536](https://github.com/zoffline/zwift-offline/pull/536))
 > * Updated to the latest version of Companion and added instructions for enabling the fitness widget ([#540](https://github.com/zoffline/zwift-offline/pull/540))
 > * Fixed an issue on the progress report screen ([#545](https://github.com/zoffline/zwift-offline/pull/545))
+> * Added RoboPacer pelotons ([#546](https://github.com/zoffline/zwift-offline/pull/546))
 
 zoffline enables the use of [Zwift](http://zwift.com) offline by acting as a partial implementation of a Zwift server. By default zoffline is only for a single player. See [Step 6: Enable Multiplayer](#step-6-optional-enable-multiplayer) for how to enable support for multiple users/profiles.
 
