@@ -492,7 +492,7 @@ class PelotonManager:
     def _write_config(self, config):
         with open(self.config_file, 'w', encoding='utf-8') as f:
             json.dump(config, f, indent=2, ensure_ascii=False)
-        self.logger.info('💾 [Peloton] config saved to %s' % self.config_file)
+        self.logger.info('[Peloton] config saved to %s' % self.config_file)
 
     def _find_pacer_id(self, pacer_reference):
         """Accepts the RoboPacer folder name or its player ID."""
@@ -519,7 +519,7 @@ class PelotonManager:
         try:
             config = self._read_config()
         except Exception as exc:
-            self.logger.error('❌ [Peloton] load - invalid %s: %s' % (self.config_file, repr(exc)))
+            self.logger.error('[Peloton] load - invalid %s: %s' % (self.config_file, repr(exc)))
             self.config_mtime = self._config_mtime()
             return
         if self.names_pool is None:
@@ -533,7 +533,7 @@ class PelotonManager:
             if peloton is None:
                 continue
             if any(p.pacer_id == peloton.pacer_id for p in pelotons):
-                self.logger.warning('⚠️ [Peloton] load - duplicated entry for pacer %s ignored' % peloton.pacer_id)
+                self.logger.warning('[Peloton] load - duplicated entry for pacer %s ignored' % peloton.pacer_id)
                 continue
             pelotons.append(peloton)
         followers = {rider.id: rider for peloton in pelotons for rider in peloton.riders}
@@ -548,23 +548,23 @@ class PelotonManager:
             self.forget_profiles(old_ids)
         self.config_mtime = self._config_mtime()
         elapsed_ms = (time.perf_counter() - started) * 1000
-        self.logger.info('✅ [Peloton] load - %d peloton(s), %d follower bot(s) in %.0f ms' % (len(pelotons), len(followers), elapsed_ms))
+        self.logger.info('[Peloton] load - %d peloton(s), %d follower bot(s) in %.0f ms' % (len(pelotons), len(followers), elapsed_ms))
 
     def _build_peloton(self, pacer_indexes, entry):
         if not isinstance(entry, dict) or entry.get('enabled', True) is False:
             return None
         pacer_id = self._find_pacer_id(entry.get('pacer', ''))
         if pacer_id is None or pacer_id not in pacer_indexes:
-            self.logger.warning('⚠️ [Peloton] load - RoboPacer "%s" not found in storage/robopacers' % entry.get('pacer'))
+            self.logger.warning('[Peloton] load - RoboPacer "%s" not found in storage/robopacers' % entry.get('pacer'))
             return None
         config = dict(DEFAULT_PELOTON_CONFIG)
         config.update(entry)
         try:
             peloton = Peloton(pacer_indexes[pacer_id], pacer_id, self.pace_partners[pacer_id], config, self.names_pool, self.game_dictionary, self.world_time)
         except Exception as exc:
-            self.logger.error('❌ [Peloton] load - could not build peloton for "%s": %s' % (entry.get('pacer'), repr(exc)))
+            self.logger.error('[Peloton] load - could not build peloton for "%s": %s' % (entry.get('pacer'), repr(exc)))
             return None
-        self.logger.info('🔄 [Peloton] load - %s + %d bots' % (self.pace_partners[pacer_id].profile.last_name or pacer_id, len(peloton.riders)))
+        self.logger.info('[Peloton] load - %s + %d bots' % (self.pace_partners[pacer_id].profile.last_name or pacer_id, len(peloton.riders)))
         return peloton
 
     def request_reload(self):
@@ -589,7 +589,7 @@ class PelotonManager:
                 try:
                     peloton.update(tick_seconds)
                 except Exception as exc:
-                    self.logger.error('❌ [Peloton] tick - pacer %s: %s' % (peloton.pacer_id, repr(exc)))
+                    self.logger.error('[Peloton] tick - pacer %s: %s' % (peloton.pacer_id, repr(exc)))
 
     # ---------- chat ----------
 
@@ -617,7 +617,7 @@ class PelotonManager:
         try:
             config = self._read_config()
         except Exception as exc:
-            self.logger.error('❌ [Peloton] chat_command - invalid config: %s' % repr(exc))
+            self.logger.error('[Peloton] chat_command - invalid config: %s' % repr(exc))
             return 'peloton.txt is invalid, check the server log'
         entries = config['pelotons']
         entry = next((e for e in entries if isinstance(e, dict) and self._find_pacer_id(e.get('pacer', '')) == pacer_id), None)
@@ -639,5 +639,5 @@ class PelotonManager:
         entry['bots'] = bots
         self._write_config(config)
         self.load()
-        self.logger.info('📨 [Peloton] chat_command - %s now has %d bots' % (pacer_name, bots))
+        self.logger.info('[Peloton] chat_command - %s now has %d bots' % (pacer_name, bots))
         return 'Peloton of %d bots following %s' % (bots, pacer_name)
