@@ -68,6 +68,7 @@ import intervals_workouts
 import trainingpeaks_workouts
 import workout_state
 import workouts_manifest
+import planned_workouts
 import free_strava
 
 logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
@@ -178,6 +179,8 @@ zwift_online_tokens = {}
 restarting = False
 restarting_in_minutes = 0
 reload_pacer_bots = False
+global_peloton_bots = {} # follower bots of RoboPacer pelotons (see peloton.py)
+peloton_manager = None
 auto_group = {'id': None, 'road_id': None, 'is_forward': None, 'all': False, 'thread': None}
 
 with open(os.path.join(SCRIPT_DIR, "data", "climbs.txt")) as f:
@@ -517,6 +520,8 @@ def get_partial_profile(player_id):
                 if f.id == 1766985504: #crc32 of "PACE PARTNER - ROUTE"
                     partial_profile.route = toSigned(f.number_value, 4) if f.number_value >= 0 else -toSigned(-f.number_value, 4)
                     break
+        elif player_id in global_peloton_bots.keys():
+            profile = global_peloton_bots[player_id].profile
         elif player_id in global_bots.keys():
             profile = global_bots[player_id].profile
         elif player_id > 10000000:
@@ -986,12 +991,15 @@ def load_intervals_workout_metadata(player_id):
     return load_workout_metadata(player_id, 'intervals-icu')
 
 
-def save_intervals_workout_metadata(player_id, event, filename):
-    return save_workout_metadata(player_id, 'intervals-icu', event, filename)
-
-
-def clear_intervals_workout_metadata(player_id):
-    clear_workout_metadata(player_id, 'intervals-icu')
+def clear_intervals_workout_metadata(player_id, event_id=None):
+    entries = workout_state.metadata_entries(load_intervals_workout_metadata(player_id))
+    removed = entries if event_id is None else [item for item in entries
+                                              if str(item.get('event_id')) == str(event_id)]
+    planned_workouts.remove_workouts(STORAGE_DIR, removed)
+    if event_id is None:
+        clear_workout_metadata(player_id, 'intervals-icu')
+    else:
+        workout_state.remove_metadata_entry(STORAGE_DIR, player_id, 'intervals-icu', event_id)
 
 
 def load_active_workout_provider(player_id):
@@ -1028,7 +1036,8 @@ def clear_managed_workouts_for_provider(player_id, provider, clear_metadata=True
     prefixes = managed_workout_prefixes(provider)
     for prefix in prefixes:
         remove_player_zfiles_by_prefix(player_id, 'customworkouts', prefix)
-    if prefixes:
+    if prefixes and os.path.isfile(workouts_manifest.manifest_file(
+            os.path.join(STORAGE_DIR, str(player_id), 'customworkouts'))):
         workouts_manifest.remove_prefixed_workouts(os.path.join(STORAGE_DIR, str(player_id), 'customworkouts'), prefixes)
     if provider == 'intervals-icu' and clear_metadata:
         clear_intervals_workout_metadata(player_id)
@@ -1039,14 +1048,17 @@ def current_workout_sync_status(player_id, provider=None):
     if not provider:
         return None
     metadata = load_workout_metadata(player_id, provider)
-    if not metadata:
+    if not workout_state.metadata_entries(metadata):
         return {
             'provider': provider,
             'metadata': None,
             'server_file_exists': False,
         }
     filename = metadata.get('filename')
-    server_file = os.path.join(STORAGE_DIR, str(player_id), 'customworkouts', filename) if filename else ''
+    cached = planned_workouts.cache_file(STORAGE_DIR, metadata.get('workout_id')) if provider == 'intervals-icu' else None
+    server_file = str(cached) if cached else ''
+    if not server_file and filename:
+        server_file = os.path.join(STORAGE_DIR, str(player_id), 'customworkouts', filename)
     return {
         'provider': provider,
         'metadata': metadata,
@@ -1063,7 +1075,7 @@ def activate_workout_provider(player_id, provider):
         clear_managed_workouts_for_provider(player_id, 'intervals-icu')
 
 
-def sync_intervals_workout_for_player(player_id):
+def sync_intervals_workout_for_player(player_id, timeout=30):
     intervals_credentials = '%s/%s/intervals_credentials.bin' % (STORAGE_DIR, player_id)
     if not os.path.exists(intervals_credentials):
         return {"status": "missing_credentials", "message": "Intervals.icu credentials are not configured."}
@@ -1071,17 +1083,17 @@ def sync_intervals_workout_for_player(player_id):
     if not athlete_id or not api_key:
         return {"status": "missing_credentials", "message": "Intervals.icu credentials are incomplete."}
 
+    previous = workout_state.metadata_entries(load_intervals_workout_metadata(player_id))
+    by_event = {str(item.get('event_id')): item for item in previous}
     activate_workout_provider(player_id, 'intervals-icu')
-    stored = {}
+    entries = []
 
-    def store_workout(filename, content, event):
-        clear_managed_workouts_for_provider(player_id, 'intervals-icu', clear_metadata=False)
-        stored['zfile'] = save_player_zfile(player_id, 'customworkouts', filename, content)
-        update_workouts_manifest(player_id, 'customworkouts', filename, content)
-        stored['metadata'] = save_intervals_workout_metadata(player_id, event, filename)
+    def store_workout(_filename, content, event):
+        entries.append(planned_workouts.store_workout(
+            STORAGE_DIR, event, content, by_event.get(str(event['id']))))
 
     try:
-        result = intervals_workouts.sync_workout(athlete_id, api_key, store_workout)
+        result = intervals_workouts.sync_workout(athlete_id, api_key, store_workout, timeout=timeout)
         if result['status'] == 'no_workout':
             clear_managed_workouts_for_provider(player_id, 'intervals-icu')
             return {
@@ -1090,6 +1102,18 @@ def sync_intervals_workout_for_player(player_id):
                 'message': 'No Intervals.icu workout found for today.',
             }
         if result['status'] == 'synced':
+            workout_state.save_metadata_collection(STORAGE_DIR, player_id, 'intervals-icu', entries)
+            planned_workouts.remove_workouts(STORAGE_DIR, previous, {item['workout_id'] for item in entries})
+            # Retire copies made by the former zfiles importer only after a
+            # successful import; other custom workouts stay in the library.
+            if any(row.filename.startswith('intervals-icu-') for row in
+                   Zfile.query.filter_by(player_id=player_id, folder='customworkouts')):
+                clear_managed_workouts_for_provider(player_id, 'intervals-icu', clear_metadata=False)
+                manifest = Zfile.query.filter_by(player_id=player_id, folder='customworkouts',
+                                                filename=workouts_manifest.MANIFEST_FILENAME).first()
+                if manifest:
+                    manifest.timestamp = int(time.time())
+                    db.session.commit()
             sync_status = current_workout_sync_status(player_id, 'intervals-icu')
             return {
                 **result,
@@ -1153,11 +1177,13 @@ def profile(username):
     profile_dir = os.path.join(STORAGE_DIR, str(current_user.player_id))
     file = os.path.join(profile_dir, 'zwift_credentials.bin')
     cred = decrypt_credentials(file)
+    upload = os.path.join(profile_dir, 'zwift_upload.txt')
+    click = os.path.join(profile_dir, 'zwift_click.txt')
     if request.method == "POST":
         if request.form['username'] == "" or request.form['password'] == "":
             flash("Zwift credentials can't be empty.")
             return render_template("profile.html", username=current_user.username)
-        if not request.form.get("zwift_profile") and not request.form.get("achievements") and not request.form.get("save_zwift"):
+        if not any ([request.form.get("zwift_profile"), request.form.get("achievements"), request.form.get("zwift_upload"), request.form.get("zwift_click")]):
             flash("Select at least one option.")
             return render_template("profile.html", username=current_user.username, uname=cred[0], passw=cred[1])
         username = request.form['username']
@@ -1189,8 +1215,10 @@ def profile(username):
                         with open(achievements_file, 'wb') as f:
                             f.write(achievements)
                     online_sync.logout(session, refresh_token)
-                    if request.form.get("save_zwift"):
+                    if request.form.get("zwift_upload") or request.form.get("zwift_click"):
                         encrypt_credentials(file, (username, password))
+                    save_option(request.form.get("zwift_upload"), upload)
+                    save_option(request.form.get("zwift_click"), click)
                 except Exception as exc:
                     logger.warning('Zwift profile: %s' % repr(exc))
                     flash("Error downloading profile.")
@@ -1200,7 +1228,7 @@ def profile(username):
                 flash("Invalid username or password.")
                 return render_template("profile.html", username=current_user.username)
         return redirect(url_for('settings', username=current_user.username))
-    return render_template("profile.html", username=current_user.username, uname=cred[0], passw=cred[1])
+    return render_template("profile.html", username=current_user.username, uname=cred[0], passw=cred[1], upload=os.path.isfile(upload), click=os.path.isfile(click))
 
 
 @app.route("/garmin/<username>/", methods=["GET", "POST"])
@@ -1370,6 +1398,8 @@ def reload_bots():
     global reload_pacer_bots
     if bool(current_user.is_admin):
         reload_pacer_bots = True
+        if peloton_manager:
+            peloton_manager.request_reload()
     return redirect(url_for('user_home', username=current_user.username))
 
 
@@ -1510,13 +1540,94 @@ def api_eventfeed():
 @app.route('/api/subscription/plan', methods=['GET'])
 @app.route('/api/quest/quests/all-quests', methods=['GET'])
 @app.route('/api/quest/quests/my-quests', methods=['GET'])
-@app.route('/api/workout/schedule/list', methods=['GET'])
 def api_empty_arrays():
     return jsonify([])
 
 @app.route('/api/assetcms/<path:path>', methods=['GET'])
 def api_assetcms(path):
+    if path == 'delivery/tenant/production/static/asset/client_config/zwift/asset-cms-shared-artifacts/assets/client_config/partner_name_map.json/download':
+        return jsonify({'intervalsicu': 'Intervals.icu'})
     return jsonify()
+
+def current_planned_workouts():
+    if request.args.get('sport', 'CYCLING').upper() != 'CYCLING':
+        return []
+    return planned_workouts_for_player(current_user.player_id)
+
+
+def current_planned_workout(workout_id=None):
+    return next((item for item in current_planned_workouts()
+                 if workout_id is None or item['id'] == workout_id), None)
+
+
+def planned_workouts_for_player(player_id):
+    if resolve_workout_provider_for_player(player_id) != 'intervals-icu':
+        return []
+    entries = workout_state.metadata_entries(load_intervals_workout_metadata(player_id))
+    result, seen = [], set()
+    for metadata in entries:
+        workout = planned_workouts.build_workout(
+            STORAGE_DIR, player_id, metadata,
+            lambda workout_id: 'https://cdn.zwift.com' + url_for(
+                'api_planned_workout_cdn_download', workout_id=workout_id))
+        if workout and workout['id'] not in seen:
+            seen.add(workout['id'])
+            result.append(workout)
+    return result
+
+
+def planned_workout_json(payload):
+    response = jsonify(payload)
+    response.headers['Cache-Control'] = 'private, no-store'
+    return response
+
+
+@app.route('/api/workout/schedule/list', methods=['GET'])
+@jwt_to_session_cookie
+@login_required
+def api_workout_schedule_list():
+    return planned_workout_json([workout['schedule'] for workout in current_planned_workouts()])
+
+
+@app.route('/api/head-unit-bff/game-home', methods=['GET'])
+@jwt_to_session_cookie
+@login_required
+def api_game_home():
+    workout = current_planned_workout()
+    return planned_workout_json(workout['home'] if workout else [])
+
+
+@app.route('/api/head-unit-bff/carousels/for-you', methods=['GET'])
+@jwt_to_session_cookie
+@login_required
+def api_for_you():
+    cards = [{
+        'recommendationType': 'workout', 'workoutUUID': workout['id'],
+        'workoutHash': None, 'assetUrl': workout['schedule']['workoutUri'],
+        'providerId': workout['schedule']['trainingProviderId'], 'provider': None,
+        'scheduleId': workout['schedule']['scheduleId'], 'score': 1.0,
+        'explanation': None, 'sourceData': None, 'source': 'SCHEDULED',
+        'sourceId': workout['schedule']['scheduleId'], 'ribbon': None,
+        'recommendedDurationMinutes': None,
+    } for workout in current_planned_workouts()]
+    return planned_workout_json(cards)
+
+
+@app.route('/api/workout/workouts/<workout_id>', methods=['GET'])
+@jwt_to_session_cookie
+@login_required
+def api_planned_workout(workout_id):
+    workout = current_planned_workout(workout_id)
+    if not workout:
+        return '', 404
+    return planned_workout_json(workout['schedule']['workoutSummary'])
+
+
+@app.route('/tp-workouts/intervalsicu/<uuid:workout_id>.zwo', methods=['GET'])
+def api_planned_workout_cdn_download(workout_id):
+    return send_from_directory(planned_workouts.cache_dir(STORAGE_DIR), str(workout_id) + '.zwo',
+                               mimetype='application/xml')
+
 
 @app.route('/api/head-unit-bff/<path:path>', methods=['GET'])
 def api_head_unit_bff(path):
@@ -1717,6 +1828,19 @@ def api_gameinfo():
         r.mimetype = 'application/json'
         return r
 
+def sync_workout_at_game_login(player_id):
+    # Game login also runs when Android reuses a saved authentication token.
+    # Keep failures separate from authentication and leave other providers alone.
+    try:
+        if resolve_workout_provider_for_player(player_id) != 'intervals-icu':
+            return
+        result = sync_intervals_workout_for_player(player_id, timeout=(2, 3))
+        logger.info('Game login workout sync: player=%s status=%s',
+                    player_id, result.get('status', 'unknown'))
+    except Exception:
+        logger.warning('Game login workout sync failed for player %s; continuing login', player_id)
+
+
 @app.route('/api/users/login', methods=['POST'])
 @jwt_to_session_cookie
 @login_required
@@ -1724,6 +1848,8 @@ def api_users_login():
     req = login_pb2.LoginRequest()
     req.ParseFromString(request.stream.read())
     player_id = current_user.player_id
+    if 'android' in request.headers.get('User-Agent', '').lower():
+        sync_workout_at_game_login(player_id)
     global_relay[player_id] = Relay(req.key)
     ghosts_enabled[player_id] = current_user.enable_ghosts
 
@@ -2525,6 +2651,8 @@ def api_profiles():
         else:
             if p_id in global_pace_partners.keys():
                 profile = global_pace_partners[p_id].profile
+            elif p_id in global_peloton_bots.keys():
+                profile = global_peloton_bots[p_id].profile
             elif p_id in global_bots.keys():
                 profile = global_bots[p_id].profile
             else:
@@ -2701,8 +2829,8 @@ def intervals_upload(player_id, activity):
     workout_metadata = load_intervals_workout_metadata(player_id)
     try:
         result = intervals_workouts.upload_activity(athlete_id, api_key, activity, workout_metadata=workout_metadata)
-        if result.get('paired'):
-            clear_intervals_workout_metadata(player_id)
+        if result.get('paired') and result.get('paired_event_id') is not None:
+            clear_intervals_workout_metadata(player_id, result.get('paired_event_id'))
     except Exception as exc:
         logger.warning("Intervals.icu upload failed. No internet? %s" % repr(exc))
 
@@ -2725,7 +2853,7 @@ def get_zwift_online_tokens(player_id):
 
 def zwift_upload(player_id, activity):
     tokens = get_zwift_online_tokens(player_id)
-    if tokens['access_token']:
+    if tokens['access_token'] and os.path.isfile("%s/%s/zwift_upload.txt" % (STORAGE_DIR, player_id)):
         with requests.session() as session:
             try:
                 activity.player_id = online_sync.get_player_id(session, tokens['access_token'])
@@ -3501,6 +3629,9 @@ def relay_worlds_generic(server_realm=None, player_id=None):
             pace_partner_variables = global_pace_partners[p_id]
             pace_partner = pace_partner_variables.route.states[pace_partner_variables.position]
             add_player_to_world(pace_partner, course_world, is_pace_partner=True)
+        peloton_bots = global_peloton_bots
+        for p_id in peloton_bots.keys():
+            add_player_to_world(peloton_bots[p_id].route.states[0], course_world, is_bot=True)
         for p_id in global_bots.keys():
             bot_variables = global_bots[p_id]
             bot = bot_variables.route.states[bot_variables.position]
@@ -3691,6 +3822,8 @@ def relay_worlds_id_players_id(server_realm, player_id):
         state.world = get_course(state)
         state.route = get_partial_profile(player_id).route
         return state.SerializeToString()
+    if player_id in global_peloton_bots.keys():
+        return global_peloton_bots[player_id].route.states[0].SerializeToString()
     if player_id in global_bots.keys():
         bot = global_bots[player_id]
         return bot.route.states[bot.position].SerializeToString()
@@ -3779,6 +3912,12 @@ def relay_worlds_attributes():
                     if command == 'disperse':
                         for bot in global_bots.keys():
                             global_bots[bot].position = random.randrange(len(global_bots[bot].route.states))
+                elif (command == 'peloton' or command.startswith('peloton ')) and is_admin(current_user):
+                    if peloton_manager:
+                        reply = peloton_manager.chat_command(state, command[len('peloton'):])
+                    else:
+                        reply = 'No RoboPacers loaded (storage/robopacers)'
+                    send_message(reply, recipients=[chat_message.player_id])
                 elif command == 'position':
                     logger.info('course %s road %s isForward %s roadTime %s route %s' % (get_course(state), road_id(state), is_forward(state), state.roadTime, state.route))
                 elif command.startswith('bookmark') and len(command) > 9:
@@ -4460,7 +4599,7 @@ def api_fitness_fitness_goals_history():
 @login_required
 def api_d_lock_service_device_authenticate():
     tokens = get_zwift_online_tokens(current_user.player_id)
-    if tokens['access_token']:
+    if tokens['access_token'] and os.path.isfile("%s/%s/zwift_click.txt" % (STORAGE_DIR, current_user.player_id)):
         headers = dict(request.headers)
         headers['Authorization'] = "Bearer %s" % tokens['access_token']
         with requests.session() as session:
