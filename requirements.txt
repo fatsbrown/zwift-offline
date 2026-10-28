@@ -6,7 +6,7 @@ protobuf==6.33.5
 pycryptodome==3.19.1
 pyjwt==2.15.1
 stravalib==1.1.0
-dnspython==2.6.1
+dnspython==2.9.0
 fitdecode==0.11.0
 werkzeug==3.1.9
 requests-toolbelt==1.0.0
