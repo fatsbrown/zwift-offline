@@ -12,7 +12,7 @@ Setting up zoffline requires two primary steps. First, zoffline must be installe
 
 ### Step 1: Install zoffline
 
-See [Creating a server on Oracle Cloud Free Tier](https://github.com/oldnapalm/zwift-offline/wiki/Creating-a-server-on-Oracle-Cloud-Free-Tier).
+See [Creating a server on Oracle Cloud Free Tier](https://github.com/fatsbrown/zwift-offline/wiki/Creating-a-server-on-Oracle-Cloud-Free-Tier).
 
 ### Step 2: Configure Zwift client to use zoffline
 
