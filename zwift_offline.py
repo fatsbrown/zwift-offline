@@ -477,7 +477,7 @@ def get_online():
     for p_id in online:
         player_state = online[p_id]
         course = get_course(player_state)
-        course_name = courses_lookup[course]
+        course_name = courses_lookup.get(course, 'Zwift')
         if course_name == 'Richmond':
             online_in_region.richmond += 1
         elif course_name == 'Watopia':
