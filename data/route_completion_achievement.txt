@@ -1,0 +1,160 @@
+{
+  "achievements": [
+    {
+      "achievementUuid": "850c0e88-8c52-43da-8f1f-e9961dc93327",
+      "routeHash": "189705957",
+      "sport": "ACHIEVEMENT_SPORT_CYCLING",
+      "bonusXp": 230,
+      "displayTitle": "Chapmans Peak",
+      "analyticsName": "chapmans"
+    },
+    {
+      "achievementUuid": "831f136f-2f6b-4674-9cf4-20b15b4006e0",
+      "routeHash": "242438872",
+      "sport": "ACHIEVEMENT_SPORT_CYCLING",
+      "bonusXp": 200,
+      "displayTitle": "Sa Calobra",
+      "analyticsName": "sacalobrad1whisky"
+    },
+    {
+      "achievementUuid": "bdf42865-a6a1-5464-8086-8cc2f2bef04c",
+      "routeHash": "500338025",
+      "sport": "ACHIEVEMENT_SPORT_CYCLING",
+      "displayTitle": "Eggum Coastal",
+      "analyticsName": "eggum"
+    },
+    {
+      "achievementUuid": "61e61606-c09b-46c3-bfba-6fe8bb6c1408",
+      "routeHash": "611896746",
+      "sport": "ACHIEVEMENT_SPORT_CYCLING",
+      "displayTitle": "Quinag Highlands",
+      "analyticsName": "benassynt"
+    },
+    {
+      "achievementUuid": "c35786dc-9330-574b-b06a-ba62c332e599",
+      "routeHash": "1352346426",
+      "sport": "ACHIEVEMENT_SPORT_CYCLING",
+      "displayTitle": "Nappvang Glow",
+      "analyticsName": "nappvang"
+    },
+    {
+      "achievementUuid": "d1a1ec5e-7a97-4f29-92a2-a42f31959af7",
+      "routeHash": "1670644998",
+      "sport": "ACHIEVEMENT_SPORT_CYCLING",
+      "displayTitle": "Du Toitskloof Pass",
+      "analyticsName": "dutoitskloof"
+    },
+    {
+      "achievementUuid": "4cb686ab-ab5e-4dfe-a24a-70724e262e47",
+      "routeHash": "1832808871",
+      "sport": "ACHIEVEMENT_SPORT_CYCLING",
+      "displayTitle": "Clarence Drive",
+      "analyticsName": "clarencedrive"
+    },
+    {
+      "achievementUuid": "22f631e0-6af1-4217-ac28-99872efac710",
+      "routeHash": "2003703945",
+      "sport": "ACHIEVEMENT_SPORT_CYCLING",
+      "bonusXp": 530,
+      "displayTitle": "Cime de la Bonette",
+      "analyticsName": "bonette"
+    },
+    {
+      "achievementUuid": "7e4f2d8a-b3c1-5f9e-a2d4-c8e9f0a1b2c3",
+      "routeHash": "2010849247",
+      "sport": "ACHIEVEMENT_SPORT_CYCLING",
+      "bonusXp": 130,
+      "displayTitle": "Glen Etive",
+      "analyticsName": "etivedown"
+    },
+    {
+      "achievementUuid": "4dbf806b-a8a0-400e-92ee-2f107db2f8de",
+      "routeHash": "2031228342",
+      "sport": "ACHIEVEMENT_SPORT_CYCLING",
+      "displayTitle": "Glen Garry Wilds",
+      "analyticsName": "glengarry"
+    },
+    {
+      "achievementUuid": "2b738ddd-c383-43e2-a15a-950607886b2d",
+      "routeHash": "2115602008",
+      "sport": "ACHIEVEMENT_SPORT_CYCLING",
+      "bonusXp": 310,
+      "displayTitle": "Dolores Dirt",
+      "analyticsName": "threerivers"
+    },
+    {
+      "achievementUuid": "108bde16-24d7-4a06-96f0-602ea32b7dc0",
+      "routeHash": "2219062314",
+      "sport": "ACHIEVEMENT_SPORT_CYCLING",
+      "bonusXp": 230,
+      "displayTitle": "Upper Bonette",
+      "analyticsName": "bonetteshort"
+    },
+    {
+      "achievementUuid": "0884b8b8-1cd7-44b2-909a-b00dbc06f79a",
+      "routeHash": "2360011663",
+      "sport": "ACHIEVEMENT_SPORT_CYCLING",
+      "displayTitle": "Coll de Femenia",
+      "analyticsName": "femenia"
+    },
+    {
+      "achievementUuid": "ba903b36-e545-5fc7-879e-34ef75fee41e",
+      "routeHash": "2517542626",
+      "sport": "ACHIEVEMENT_SPORT_CYCLING",
+      "displayTitle": "The Midnight Sun Road",
+      "analyticsName": "lauvika"
+    },
+    {
+      "achievementUuid": "cf69eeb1-aa60-5aba-b1f1-548ffaa6424d",
+      "routeHash": "2604276625",
+      "sport": "ACHIEVEMENT_SPORT_CYCLING",
+      "displayTitle": "Colorado River Sunrise",
+      "analyticsName": "corise"
+    },
+    {
+      "achievementUuid": "faed3ad1-ae97-4bd5-b9f3-5a35560d6f75",
+      "routeHash": "2631286292",
+      "sport": "ACHIEVEMENT_SPORT_CYCLING",
+      "bonusXp": 355,
+      "displayTitle": "Col du Galibier, Lautaret",
+      "analyticsName": "galibierlautaret"
+    },
+    {
+      "achievementUuid": "d10bb271-a12e-4324-ae47-7c54189ffec9",
+      "routeHash": "3183967736",
+      "sport": "ACHIEVEMENT_SPORT_CYCLING",
+      "bonusXp": 270,
+      "displayTitle": "Teide Plateau",
+      "analyticsName": "teide"
+    },
+    {
+      "achievementUuid": "5fa0ce89-8812-58eb-8d4e-5a0d7be8005b",
+      "routeHash": "3420477305",
+      "sport": "ACHIEVEMENT_SPORT_CYCLING",
+      "displayTitle": "Glen Canyon",
+      "analyticsName": "glencanyon"
+    },
+    {
+      "achievementUuid": "8969f5ea-4026-4d5c-a4ec-7b7784eff15d",
+      "routeHash": "3565295899",
+      "sport": "ACHIEVEMENT_SPORT_CYCLING",
+      "bonusXp": 580,
+      "displayTitle": "Arches National Park",
+      "analyticsName": "archesnp"
+    },
+    {
+      "achievementUuid": "ce256c5f-d37b-43f7-95c5-f14565070cdf",
+      "routeHash": "4022077873",
+      "sport": "ACHIEVEMENT_SPORT_CYCLING",
+      "displayTitle": "Bain's Kloof Pass",
+      "analyticsName": "wellingrivier"
+    },
+    {
+      "achievementUuid": "536acd3a-d1e2-45e3-97a3-4087a99f41a0",
+      "routeHash": "4242269117",
+      "sport": "ACHIEVEMENT_SPORT_CYCLING",
+      "displayTitle": "The Hogsback",
+      "analyticsName": "hogsback"
+    }
+  ]
+}
