@@ -47,13 +47,28 @@
       }
     },
     {
-      "name": "bishop_banner"
+      "name": "bishop_banner",
+      "value": true
     },
     {
       "name": "download_entitlements_from_asset_cms"
     },
     {
-      "name": "enable_coach_workout_text_suppression"
+      "name": "enable_coach_workout_text_suppression",
+      "value": true,
+      "values": {
+        "fields": {
+          "suppress_workouts_from_foryou": {
+            "boolValue": true
+          },
+          "suppress_workouts_from_nextup": {
+            "boolValue": true
+          },
+          "suppress_workouts_on_zc": {
+            "boolValue": true
+          }
+        }
+      }
     },
     {
       "name": "experiment_hero_section",
@@ -213,6 +228,9 @@
       "value": true,
       "values": {
         "fields": {
+          "activity_start_scan_timeout_seconds": {
+            "varintValue": "0"
+          },
           "not_all_devices_found_display_delay_ms": {
             "varintValue": "30000"
           },
@@ -241,7 +259,18 @@
       "value": true
     },
     {
-      "name": "game_1_108_allow_experimental_uploading"
+      "name": "game_1_108_allow_experimental_uploading",
+      "value": true,
+      "values": {
+        "fields": {
+          "allow_mochi_uploading": {
+            "boolValue": true
+          },
+          "allow_portal_uploading": {
+            "boolValue": false
+          }
+        }
+      }
     },
     {
       "name": "game_1_108_challenge_poster_cards",
@@ -368,7 +397,7 @@
       "values": {
         "fields": {
           "cache_gear_selection": {
-            "boolValue": true
+            "boolValue": false
           },
           "display_locked_value": {
             "boolValue": true
@@ -404,7 +433,15 @@
       "value": true
     },
     {
-      "name": "game_1_117_bishop_progress_report"
+      "name": "game_1_117_bishop_progress_report",
+      "value": true,
+      "values": {
+        "fields": {
+          "auto_tab_enabled": {
+            "boolValue": true
+          }
+        }
+      }
     },
     {
       "name": "game_1_117_feature_gate_entitlements",
@@ -472,14 +509,20 @@
       "value": true,
       "values": {
         "fields": {
+          "change_plan_left_content_image_url": {
+            "stringValue": "https://content-cdn.zwift.com/paywall_images/zwift-plus_trial_interstitial_2x.png"
+          },
           "is_change_plan_action_enabled": {
-            "boolValue": false
+            "boolValue": true
           },
           "is_resume_action_enabled": {
             "boolValue": true
           },
           "is_subscribe_action_enabled": {
-            "boolValue": false
+            "boolValue": true
+          },
+          "supported_target_plans": {
+            "stringValue": "[{\"plan_id\": \"zwift-plus-membership\",\"info_interstitial_id\": \"membership_change_plan\"}]"
           }
         }
       }
@@ -527,7 +570,14 @@
     },
     {
       "name": "game_1_120_route_badge_drop_in_restart",
-      "value": true
+      "value": true,
+      "values": {
+        "fields": {
+          "all_lappable_routes_enabled": {
+            "boolValue": true
+          }
+        }
+      }
     },
     {
       "name": "game_1_121_0_view_controller_lifecycle_fixes",
@@ -546,7 +596,8 @@
       "value": true
     },
     {
-      "name": "game_1_121_see_rewards_button"
+      "name": "game_1_121_see_rewards_button",
+      "value": true
     },
     {
       "name": "game_1_122_hide_route_difficulty_rating"
@@ -576,19 +627,25 @@
       "value": true
     },
     {
-      "name": "game_1_123_fit_file_hardening",
-      "value": true
+      "name": "game_1_123_fit_file_hardening"
     },
     {
-      "name": "game_1_123_prevent_unwanted_ble_reconnect_on_apple",
-      "value": true
+      "name": "game_1_123_prevent_unwanted_ble_reconnect_on_apple"
     },
     {
       "name": "game_1_123_zsignal_fix",
       "value": true
     },
     {
-      "name": "game_1_124_0_image_download"
+      "name": "game_1_124_0_image_download",
+      "value": true,
+      "values": {
+        "fields": {
+          "zwift_plus_icon": {
+            "stringValue": "https://assetcms.zwift.com/4AF1FEA4EA9300B624019EFFC2AE1A1A7433C60BE8FBE21B8A7570DC7C98E490"
+          }
+        }
+      }
     },
     {
       "name": "game_1_124_any_point_route_completion"
@@ -975,7 +1032,7 @@
       "values": {
         "fields": {
           "hero_carousel_id": {
-            "stringValue": "home_page_hero_carousel_123"
+            "stringValue": "home_page_hero_carousel_124"
           }
         }
       }
@@ -1064,7 +1121,7 @@
       "values": {
         "fields": {
           "challenge_carousel_id": {
-            "stringValue": "prod_home_challenge_carousel"
+            "stringValue": "prod_home_challenge_carousel_124"
           }
         }
       }
@@ -1523,7 +1580,7 @@
             "stringValue": "dlc_asset"
           },
           "build_id": {
-            "stringValue": "167409"
+            "stringValue": "168119"
           },
           "canary_test": {
             "boolValue": true
@@ -1628,7 +1685,36 @@
       "name": "game_log_rssi"
     },
     {
-      "name": "game_mochi"
+      "name": "game_mochi",
+      "value": true,
+      "values": {
+        "fields": {
+          "config": {
+            "stringValue": "{\"manifest_folder\":\"watopian\",\"manifests\":[{\"key\":\"watopian.manifest.json\"}]}"
+          },
+          "entitlement_mode": {
+            "stringValue": "mochi"
+          },
+          "manifest": {
+            "stringValue": "{}"
+          },
+          "recommended_video": {
+            "stringValue": "lochlong_1440"
+          },
+          "server_address": {
+            "stringValue": "https://loveturtle.zwift.com/1.0.1"
+          },
+          "showDLCTab": {
+            "boolValue": false
+          },
+          "tidy_streaming": {
+            "boolValue": true
+          },
+          "use_parallel_download": {
+            "boolValue": true
+          }
+        }
+      }
     },
     {
       "name": "game_mochi_performance"
@@ -1740,7 +1826,15 @@
       }
     },
     {
-      "name": "game_quest_banner"
+      "name": "game_quest_banner",
+      "value": true,
+      "values": {
+        "fields": {
+          "allow_screenshots": {
+            "boolValue": true
+          }
+        }
+      }
     },
     {
       "name": "game_road_graph_on_route_in_game"
@@ -1879,7 +1973,8 @@
       "name": "game_wd1_data_acq"
     },
     {
-      "name": "game_whalesplash"
+      "name": "game_whalesplash",
+      "value": true
     },
     {
       "name": "game_world_deco_packages",
