@@ -407,10 +407,18 @@ def get_routes():
         return json.load(fd, object_hook=lambda d: {int(k) if k.lstrip('-').isdigit() else k: v for k, v in d.items()})
 
 def get_route_name(state):
-    routes = get_routes()
+    if zo.get_course(state) == 18:
+        routes = {}
+        with open('%s/data/route_completion_achievement.txt' % SCRIPT_DIR) as fd:
+            rca = json.load(fd)
+        for achievement in rca['achievements']:
+            routeHash = int.from_bytes(int(achievement['routeHash']).to_bytes(4, 'little'), 'little', signed=True)
+            routes[routeHash] = {'name': achievement['displayTitle']}
+    else:
+        routes = get_routes()
     if state.route in routes:
         return routes[state.route]['name']
-    return zo.courses_lookup[zo.get_course(state)]
+    return zo.courses_lookup.get(zo.get_course(state), 'Zwift')
 
 def load_ghosts_folder(folder, ghosts):
     if os.path.isdir(folder):
