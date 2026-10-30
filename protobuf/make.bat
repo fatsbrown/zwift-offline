@@ -18,5 +18,6 @@ protoc --python_out=. user_storage.proto
 protoc --python_out=. fitness.proto
 protoc --python_out=. race-result.proto
 protoc --python_out=. structured_events.proto
+protoc --python_out=. route-completion-achievement.proto
 
 pause

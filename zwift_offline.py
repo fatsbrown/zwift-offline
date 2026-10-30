@@ -61,6 +61,7 @@ import playback_pb2
 import user_storage_pb2
 import fitness_pb2
 import structured_events_pb2
+import route_completion_achievement_pb2
 
 import online_sync
 import intervals_workouts
@@ -1810,7 +1811,6 @@ def api_clubs_club_my_clubs_summary():
 @app.route('/api/game-asset-patching-service/manifest', methods=['GET'])
 @app.route('/api/workout/progress', methods=['POST'])
 @app.route('/api/power-curve/power-profile/proto', methods=['GET'])
-@app.route('/api/achievement/route-completion-achievements', methods=['GET'])  # TODO
 @app.route('/api/coach/public/plan-settings', methods=['GET'])
 def api_proto_empty():
     return '', 200
@@ -4159,6 +4159,41 @@ def api_route_results_completion_stats_all():
     page_count = math.ceil(len(stats) / page_size)
     response = {"response": {"stats": current_page}, "hasPreviousPage": page > 0, "hasNextPage": page < page_count - 1, "pageCount": page_count}
     return jsonify(response)
+
+@app.route('/api/achievement/route-completion-achievements', methods=['GET'])
+@jwt_to_session_cookie
+@login_required
+def api_achievement_route_completion_achievements():
+    response = route_completion_achievement_pb2.LoadPlayerRouteCompletionAchievementsResponse()
+    with open(os.path.join(SCRIPT_DIR, "data", "route_completion_achievement.txt")) as f:
+        Parse(f.read(), response)
+    unlocks_file = os.path.join(STORAGE_DIR, str(current_user.player_id), 'route_completion_achievements.bin')
+    if os.path.isfile(unlocks_file):
+        unlocks = route_completion_achievement_pb2.RouteCompletionAchievementUnlockRequest()
+        with open(unlocks_file, 'rb') as f:
+            unlocks.ParseFromString(f.read())
+        for achievement in response.achievements:
+            if achievement.achievement_uuid in unlocks.achievement_uuids:
+                achievement.unlocked = True
+    return response.SerializeToString(), 200
+
+@app.route('/api/achievement/route-completion-achievement-unlocks', methods=['POST'])
+@jwt_to_session_cookie
+@login_required
+def api_achievement_route_completion_achievement_unlocks():
+    new = route_completion_achievement_pb2.RouteCompletionAchievementUnlockRequest()
+    new.ParseFromString(request.stream.read())
+    unlocks_file = os.path.join(STORAGE_DIR, str(current_user.player_id), 'route_completion_achievements.bin')
+    unlocks = route_completion_achievement_pb2.RouteCompletionAchievementUnlockRequest()
+    if os.path.isfile(unlocks_file):
+        with open(unlocks_file, 'rb') as f:
+            unlocks.ParseFromString(f.read())
+    for achievement_uuid in new.achievement_uuids:
+        if achievement_uuid not in unlocks.achievement_uuids:
+            unlocks.achievement_uuids.append(achievement_uuid)
+    with open(unlocks_file, 'wb') as f:
+        f.write(unlocks.SerializeToString())
+    return '', 202
 
 @app.route('/api/race-results', methods=['POST'])
 @jwt_to_session_cookie
