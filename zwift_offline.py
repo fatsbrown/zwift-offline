@@ -465,6 +465,7 @@ courses_lookup = {
     15: 'Paris',
     16: 'Gravel Mountain',  # event specific
     17: 'Scotland'
+    # 18 is Mochi (video routes), not adding as joining players there is not possible
 }
 
 
@@ -1624,6 +1625,11 @@ def api_planned_workout(workout_id):
     if not workout:
         return '', 404
     return planned_workout_json(workout['schedule']['workoutSummary'])
+
+
+@app.route('/mochi/<path:file>', methods=['GET'])
+def mochi_download(file):
+    return send_from_directory('%s/mochi' % STORAGE_DIR, file)
 
 
 @app.route('/tp-workouts/intervalsicu/<uuid:workout_id>.zwo', methods=['GET'])
