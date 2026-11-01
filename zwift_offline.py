@@ -469,6 +469,7 @@ courses_lookup = {
     15: 'Paris',
     16: 'Gravel Mountain',  # event specific
     17: 'Scotland'
+    # 18 is Mochi (video routes), not adding as joining players there is not possible
 }
 
 
@@ -1595,7 +1596,7 @@ def api_workout_schedule_list():
 @login_required
 def api_game_home():
     workout = current_planned_workout()
-    return planned_workout_json(workout['home'] if workout else [])
+    return planned_workout_json(workout['home'] if workout else {})
 
 
 @app.route('/api/head-unit-bff/carousels/for-you', methods=['GET'])
@@ -1634,6 +1635,8 @@ def api_planned_workout_cdn_download(workout_id):
 def api_head_unit_bff(path):
     if path == "carousels/home-challenges":
         return jsonify({"items":[]})
+    if path == "crm":
+        return jsonify({})
     return jsonify([])
 
 def activity_moving_time(activity):
@@ -1810,6 +1813,7 @@ def api_clubs_club_my_clubs_summary():
 @app.route('/api/workout/progress', methods=['POST'])
 @app.route('/api/power-curve/power-profile/proto', methods=['GET'])
 @app.route('/api/coach/public/plan-settings', methods=['GET'])
+@app.route('/api/membership/profiles/me/feature-gate-access', methods=['GET'])
 def api_proto_empty():
     return '', 200
 
@@ -4285,6 +4289,11 @@ def relay_worlds_leave(server_realm):
     return '{"worldtime":%ld}' % world_time()
 
 
+@app.route('/mochi/<path:file>', methods=['GET'])
+def mochi_download(file):
+    return send_from_directory('%s/mochi' % STORAGE_DIR, file)
+
+
 def load_variants(file):
     vs = variants_pb2.FeatureResponse()
     try:
@@ -4295,6 +4304,8 @@ def load_variants(file):
     variants = {}
     for v in vs.variants:
         variants[v.name] = v
+    if 'game_mochi' in variants and os.path.isfile('%s/mochi/watopian/watopian.manifest.json' % STORAGE_DIR):
+        variants['game_mochi'].values.fields['server_address'].string_value = 'https://cdn.zwift.com/mochi'
     return variants
 
 def create_variants_response(request, variants):
