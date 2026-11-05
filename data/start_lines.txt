@@ -1039,6 +1039,111 @@
     "road": 9,
     "time": 1001900
   },
+  "-729671397": {
+    "name": "Video - Arches National Park",
+    "road": 27062,
+    "time": 6612
+  },
+  "-272889423": {
+    "name": "Video - Bain's Kloof Pass",
+    "road": 27042,
+    "time": 6508
+  },
+  "189705957": {
+    "name": "Video - Chapman's Peak",
+    "road": 27052,
+    "time": 11440
+  },
+  "2003703945": {
+    "name": "Video - Cime de la Bonette",
+    "road": 27103,
+    "time": 6503
+  },
+  "1832808871": {
+    "name": "Video - Clarence Drive",
+    "road": 27037,
+    "time": 8493
+  },
+  "-1663681004": {
+    "name": "Video - Col du Galibier, Lautaret",
+    "road": 27091,
+    "time": 10359
+  },
+  "-1934955633": {
+    "name": "Video - Coll de Femenia",
+    "road": 27056,
+    "time": 12860
+  },
+  "-1690690671": {
+    "name": "Video - Colorado River Sunrise",
+    "road": 27017,
+    "time": 6958
+  },
+  "2115602008": {
+    "name": "Video - Dolores Dirt",
+    "road": 27074,
+    "time": 12492
+  },
+  "1670644998": {
+    "name": "Video - Du Toitskloof Pass",
+    "road": 27055,
+    "time": 11464
+  },
+  "500338025": {
+    "name": "Video - Eggum Coastal",
+    "road": 27021,
+    "time": 9203
+  },
+  "-874489991": {
+    "name": "Video - Glen Canyon",
+    "road": 27035,
+    "time": 6916
+  },
+  "2010849247": {
+    "name": "Video - Glen Etive",
+    "road": 27060,
+    "time": 14449
+  },
+  "2031228342": {
+    "name": "Video - Glen Garry Wilds",
+    "road": 27061,
+    "time": 8507
+  },
+  "1352346426": {
+    "name": "Video - Nappvang Glow",
+    "road": 27025,
+    "time": 6213
+  },
+  "611896746": {
+    "name": "Video - Quinag Highlands",
+    "road": 27045,
+    "time": 7241
+  },
+  "242438872": {
+    "name": "Video - Sa Calobra",
+    "road": 27101,
+    "time": 9924
+  },
+  "-1110999560": {
+    "name": "Video - Teide Plateau",
+    "road": 20502,
+    "time": 8881
+  },
+  "-52698179": {
+    "name": "Video - The Hogsback",
+    "road": 27031,
+    "time": 7534
+  },
+  "-1777424670": {
+    "name": "Video - The Midnight Sun Road",
+    "road": 27024,
+    "time": 7284
+  },
+  "-2075904982": {
+    "name": "Video - Upper Bonette",
+    "road": 27104,
+    "time": 9743
+  },
   "-895554793": {
     "name": "Watopia - 1 x 3 Min Lightning Lap",
     "road": 200,

@@ -563,7 +563,7 @@ def get_course(state):
     return (state.f19 & 0xff0000) >> 16
 
 def road_id(state):
-    return (state.aux3 & 0xff00) >> 8
+    return (state.aux3 >> 8) & 0xffff
 
 def is_forward(state):
     return (state.f19 & 4) != 0
