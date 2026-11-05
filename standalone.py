@@ -362,7 +362,7 @@ class TCPHandler(socketserver.BaseRequestHandler):
                     message.player_id = player_id
                     message.world_time = zo.world_time()
                     for player_update_proto in list(zo.player_update_queue[player_id]):
-                        if len(message.SerializeToString()) + len(player_update_proto) > 1400:
+                        if message.ByteSize() + len(player_update_proto) > 1400:
                             new_msg = udp_node_msgs_pb2.ServerToClient()
                             new_msg.CopyFrom(message)
                             messages.append(new_msg)
@@ -784,7 +784,7 @@ class UDPHandler(socketserver.BaseRequestHandler):
                 if not p_id in online.keys():
                     player.worldTime = message.world_time - simulated_latency
                     player.groupId = 0 # fix bots in event only routes
-                if len(message.SerializeToString()) + len(player.SerializeToString()) > 1400:
+                if message.ByteSize() + player.ByteSize() > 1400:
                     new_msg = udp_node_msgs_pb2.ServerToClient()
                     new_msg.CopyFrom(message)
                     messages.append(new_msg)
