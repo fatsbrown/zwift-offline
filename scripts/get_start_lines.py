@@ -4,6 +4,7 @@ import re
 import json
 import subprocess
 import ftfy
+from urllib3 import PoolManager
 
 worlds = 'C:\\Program Files (x86)\\Zwift\\assets\\Worlds'
 
@@ -42,6 +43,20 @@ for directory in os.listdir(worlds):
                 'road': int(checkpoints[0].get('road')),
                 'time': int(float(checkpoints[0].get('time')) * 1000000 + 5000)
             }
+
+base_url = 'https://loveturtle.zwift.com/1.0.2/'
+manifest = PoolManager().request('GET', base_url + 'watopian/watopian.manifest.json').json()
+for collection in manifest['collections']:
+    for ride in collection['rides']:
+        route_hash = int.from_bytes(int(ride['route_hash']).to_bytes(4, 'little'), 'little', signed=True)
+        xml = PoolManager().request('GET', base_url + ride['route']['key']).data.decode('utf-8')
+        tree = ET.fromstring('<root>%s</root>' % xml)
+        checkpoints = list(tree.find('highrescheckpoint').iter('entry'))
+        data[route_hash] = {
+            'name': 'Video - ' + ride['pretty_name'],
+            'road': ride['road_id'],
+            'time': int(float(checkpoints[0].get('time')) * 1000000 + 5000)
+        }
 
 with open('../data/start_lines.txt', 'w') as f:
     json.dump({k: v for k, v in sorted(data.items(), key=lambda d: d[1]['name'])}, f, indent=2)
