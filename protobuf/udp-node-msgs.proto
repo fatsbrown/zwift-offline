@@ -137,7 +137,7 @@ message PlayerState {
 	//byte[2]: fallback course/getMapRevisionId
 	//byte[3]: realRideons (not counted yet in BikeEntity::m_rideons) @ BikeEntity::UpdateRideOns, see also BikeEntity::Update
 	optional uint32 f19 = 19;
-	//ZNETWORK_SerializeAux3: low 4 bits=POWERUP_TYPE; next 4 bits: BikeEntity.field_2B14+1; next 8 bits: road_id
+	//ZNETWORK_SerializeAux3: low 4 bits=POWERUP_TYPE; next 4 bits: BikeEntity.field_2B14+1; next 16 bits: road_id
 	// BikeEntity.field_2b16: true-> |= 0x2000000, false-> |= 0x1000000 (bits 24-25)
 	// bit 28: EbikeBoost::GetActiveBoostOption
 	optional uint32 aux3 = 20;
