@@ -360,6 +360,22 @@ To enable support for IPv6 set the environment variable ``ZOFFLINE_SERVER_HOST``
 * The file is reloaded automatically when it changes (also with "Reload bots" in the launcher page). Set ``"enabled": false`` to disable a peloton without deleting it.
 </details>
 
+<details><summary>Solo blob</summary>
+
+* Solo peloton "blob" is a group of bots that swarm around the player, in real time - no RoboPacer needed.
+* The bots ride the actual trail you just rode (real corners, hills and speed), sit wheel to wheel behind you to use the draft, mix and rotate: somebody comes up to your handlebars, pulls for a while, then drifts back through the group and somebody else takes over.
+* Chat commands:
+  * ``.blob <n>`` - start/keep a blob of n riders around you
+  * ``.blob`` - show status
+  * ``.blob new`` - same number of riders, new faces
+  * ``.blob off`` - stop
+* Gestures (F-keys) that move the group:
+  * Elbow (F1) - come and pass me
+  * Hammertime (F4) - full gas, segment on
+  * I'm toast (F7) - easing off
+  * Bell (F8) - I want a turn in front
+</details>
+
 <details><summary>Bookmarks</summary>
 
 * When you finish an activity, your last position will be saved as a bookmark.
