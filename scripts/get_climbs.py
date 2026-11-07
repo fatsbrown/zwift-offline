@@ -1,15 +1,26 @@
 import os
+import sys
 import xml.etree.ElementTree as ET
 import json
-import subprocess
+import zwift_wad
+
+assets = (
+    os.path.join(os.environ.get('ProgramFiles(x86)', r'C:\Program Files (x86)'), 'Zwift', 'assets'),
+    os.path.expanduser('~/Library/Application Support/Zwift/assets'),
+    os.path.expanduser('~/Documents/Zwift/assets')
+)
+
+source = next((d for d in assets if os.path.isdir(os.path.join(d, 'Worlds'))), None)
+if source is None:
+    sys.exit('Zwift assets not found')
 
 data = []
 
-subprocess.run(['wad_unpack.exe', 'C:\\Program Files (x86)\\Zwift\\assets\\Worlds\\roads.wad'])
-climbs = 'Worlds\\portal'
-for file in os.listdir(climbs):
-    if file.startswith('road_'):
-        tree = ET.parse(os.path.join(climbs, file))
+wad = os.path.join(source, 'Worlds', 'roads.wad')
+files = dict(zwift_wad.entries(zwift_wad.read_wad(wad)))
+for file in files:
+    if file.startswith('Worlds/portal/road_'):
+        tree = ET.fromstring(files[file].decode('utf-8'))
         metadata = tree.find('.//metadata')
         name = metadata.find('m_PortalRoadUserFacingName').text
         length = round(float(metadata.find('m_PortalRoadCourseLength').text) / 100000, 1)

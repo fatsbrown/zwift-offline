@@ -182,6 +182,7 @@ restarting_in_minutes = 0
 reload_pacer_bots = False
 global_peloton_bots = {} # follower bots of RoboPacer pelotons (see peloton.py)
 peloton_manager = None
+solo_blob_manager = None # live group riding around the local player (see solo_blob.py)
 auto_group = {'id': None, 'road_id': None, 'is_forward': None, 'all': False, 'thread': None}
 
 with open(os.path.join(SCRIPT_DIR, "data", "climbs.txt")) as f:
@@ -3820,6 +3821,8 @@ def relay_worlds_id_join(server_realm):
 
 
 @app.route('/relay/worlds/<int:server_realm>/players/<int:player_id>', methods=['GET'])
+@jwt_to_session_cookie
+@login_required
 def relay_worlds_id_players_id(server_realm, player_id):
     if player_id in online.keys():
         player = online[player_id]
@@ -3835,6 +3838,11 @@ def relay_worlds_id_players_id(server_realm, player_id):
     if player_id in global_bots.keys():
         bot = global_bots[player_id]
         return bot.route.states[bot.position].SerializeToString()
+    if 10000000 > player_id > 9000000 and current_user.player_id in global_bookmarks.keys():
+        bookmarks = global_bookmarks[current_user.player_id]
+        if player_id in bookmarks.keys():
+            bookmarks[player_id].state.worldTime = world_time()
+            return bookmarks[player_id].state.SerializeToString()
     return '', 404
 
 
@@ -3926,6 +3934,12 @@ def relay_worlds_attributes():
                     else:
                         reply = 'No RoboPacers loaded (storage/robopacers)'
                     send_message(reply, recipients=[chat_message.player_id])
+                elif (command == 'blob' or command.startswith('blob ')) and is_admin(current_user):
+                    if solo_blob_manager:
+                        reply = solo_blob_manager.chat_command(chat_message.player_id, command[len('blob'):])
+                    else:
+                        reply = 'Solo blob not available'
+                    send_message(reply, recipients=[chat_message.player_id])
                 elif command == 'position':
                     logger.info('course %s road %s isForward %s roadTime %s route %s' % (get_course(state), road_id(state), is_forward(state), state.roadTime, state.route))
                 elif command.startswith('bookmark') and len(command) > 9:
@@ -3935,6 +3949,11 @@ def relay_worlds_attributes():
                     send_message('Invalid command: %s' % command, recipients=[chat_message.player_id])
                 return '', 201
         discord.send_message(chat_message.message, chat_message.player_id)
+    # gestures (elbow flick, hammer, toast, bell) steer the solo blob group
+    if player_update.wa_type == udp_node_msgs_pb2.WA_TYPE.WAT_B_ACT and solo_blob_manager:
+        reply = solo_blob_manager.on_raw_gesture(current_user.player_id, player_update.payload)
+        if reply:
+            send_message(reply, recipients=[current_user.player_id])
     for receiving_player_id in online.keys():
         should_receive = False
         # Chat message
