@@ -3872,6 +3872,8 @@ def relay_worlds_id_join(server_realm):
 
 
 @app.route('/relay/worlds/<int:server_realm>/players/<int:player_id>', methods=['GET'])
+@jwt_to_session_cookie
+@login_required
 def relay_worlds_id_players_id(server_realm, player_id):
     if player_id in online.keys():
         player = online[player_id]
@@ -3887,6 +3889,11 @@ def relay_worlds_id_players_id(server_realm, player_id):
     if player_id in global_bots.keys():
         bot = global_bots[player_id]
         return bot.route.states[bot.position].SerializeToString()
+    if 10000000 > player_id > 9000000 and current_user.player_id in global_bookmarks.keys():
+        bookmarks = global_bookmarks[current_user.player_id]
+        if player_id in bookmarks.keys():
+            bookmarks[player_id].state.worldTime = world_time()
+            return bookmarks[player_id].state.SerializeToString()
     return '', 404
 
 
