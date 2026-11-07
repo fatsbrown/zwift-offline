@@ -1,11 +1,19 @@
 import os
+import sys
 import xml.etree.ElementTree as ET
 import re
 import json
-import subprocess
-import ftfy
+import zwift_wad
 
-worlds = 'C:\\Program Files (x86)\\Zwift\\assets\\Worlds'
+assets = (
+    os.path.join(os.environ.get('ProgramFiles(x86)', r'C:\Program Files (x86)'), 'Zwift', 'assets'),
+    os.path.expanduser('~/Library/Application Support/Zwift/assets'),
+    os.path.expanduser('~/Documents/Zwift/assets')
+)
+
+source = next((d for d in assets if os.path.isdir(os.path.join(d, 'Worlds'))), None)
+if source is None:
+    sys.exit('Zwift assets not found')
 
 world_to_course = {
     '1': (6, 'Watopia'),
@@ -25,14 +33,12 @@ world_to_course = {
 
 data = []
 
-for directory in os.listdir(worlds):
-    world = directory[5:]
-    if os.path.isdir(os.path.join(worlds, directory)) and world in world_to_course:
-        subprocess.run(['wad_unpack.exe', os.path.join(worlds, directory, 'data_1.wad')])
-        routes = os.path.join('Worlds', directory, 'routes')
-        for file in os.listdir(routes):
-            with open(os.path.join(routes, file)) as f:
-                xml = f.read()
+for world in world_to_course:
+    wad = os.path.join(source, 'Worlds', 'world%s' % world, 'data_1.wad')
+    files = dict(zwift_wad.entries(zwift_wad.read_wad(wad)))
+    for file in files:
+        if file.startswith('Worlds/world%s/routes/routes' % world):
+            xml = files[file].decode('utf-8')
             tree = ET.fromstring(re.sub(r"(<\?xml[^>]+\?>)", r"\1<root>", xml) + "</root>")
             route = tree.find('route')
             if route.get('eventOnly') == '1':
@@ -41,7 +47,7 @@ for directory in os.listdir(worlds):
                 if not name.startswith(wname):
                     name = '%s - %s' % (wname, name)
                 event = {
-                    'name': ftfy.ftfy(name),
+                    'name': name,
                     'route': int(route.get('nameHash')),
                     'distance': round(float(route.get('distanceInMeters')) + float(route.get('leadinDistanceInMeters')), 1),
                     'course': world_to_course[world][0],

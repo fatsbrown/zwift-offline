@@ -1,12 +1,20 @@
 import os
+import sys
 import xml.etree.ElementTree as ET
 import re
 import json
-import subprocess
-import ftfy
 from urllib3 import PoolManager
+import zwift_wad
 
-worlds = 'C:\\Program Files (x86)\\Zwift\\assets\\Worlds'
+assets = (
+    os.path.join(os.environ.get('ProgramFiles(x86)', r'C:\Program Files (x86)'), 'Zwift', 'assets'),
+    os.path.expanduser('~/Library/Application Support/Zwift/assets'),
+    os.path.expanduser('~/Documents/Zwift/assets')
+)
+
+source = next((d for d in assets if os.path.isdir(os.path.join(d, 'Worlds'))), None)
+if source is None:
+    sys.exit('Zwift assets not found')
 
 world_names = {
     '1': 'Watopia',
@@ -26,20 +34,18 @@ world_names = {
 
 data = {}
 
-for directory in os.listdir(worlds):
-    world = directory[5:]
-    if os.path.isdir(os.path.join(worlds, directory)) and world in world_names:
-        subprocess.run(['wad_unpack.exe', os.path.join(worlds, directory, 'data_1.wad')])
-        routes = os.path.join('Worlds', directory, 'routes')
-        for file in os.listdir(routes):
-            with open(os.path.join(routes, file)) as f:
-                xml = f.read()
+for world in world_names:
+    wad = os.path.join(source, 'Worlds', 'world%s' % world, 'data_1.wad')
+    files = dict(zwift_wad.entries(zwift_wad.read_wad(wad)))
+    for file in files:
+        if file.startswith('Worlds/world%s/routes/routes' % world):
+            xml = files[file].decode('utf-8')
             tree = ET.fromstring(re.sub(r"(<\?xml[^>]+\?>)", r"\1<root>", xml) + "</root>")
             route = tree.find('route')
             nameHash = int.from_bytes(int(route.get('nameHash')).to_bytes(4, 'little'), 'little', signed=True)
             checkpoints = list(tree.find('highrescheckpoint').iter('entry'))
             data[nameHash] = {
-                'name': '%s - %s' % (world_names[world], ftfy.ftfy(route.get('name').strip())),
+                'name': '%s - %s' % (world_names[world], route.get('name').strip()),
                 'road': int(checkpoints[0].get('road')),
                 'time': int(float(checkpoints[0].get('time')) * 1000000 + 5000)
             }
