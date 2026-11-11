@@ -137,7 +137,7 @@ to generate your own certificates and do the same.
 <details><summary>Android (non-rooted device)</summary>
 
 * Install required apps:
-  * Download and install ``ZofflineObb.apk`` from [here](https://github.com/Argon2000/ZofflineObbAndroid/releases/latest)
+  * Download and install ``ZofflineObb.apk`` from [here](https://github.com/fatsbrown/ZofflineObbAndroid/releases/latest)
   * Download and install ``app-Github-release.apk`` from [here](https://github.com/x-falcon/Virtual-Hosts/releases/latest)
   * Create a `hosts.txt` file to use with the app (you could use a text editor app or create it online with an online tool such as [this](https://passwordsgenerator.net/text-editor/)). The file must look like this (replace ``<zoffline ip>`` with the IP address of the machine running zoffline):
     ```
@@ -152,8 +152,8 @@ to generate your own certificates and do the same.
 * Patch after every installation or update:
   * Install/update Zwift from Google play, but do not start it yet.
     * If you have already started it go to `Android Settings > Applications > Zwift` and clear data or uninstall and reinstall the app.
-  * __NOTE:__ ZofflineObb doesn't work on Android 15 and later versions. As a workaround, you can patch the OBB file on Windows. See [#505](https://github.com/zoffline/zwift-offline/issues/505) for details.
-  * Open the `ZofflineObb` app and run it (allow access to storage)
+  * Open the "ZofflineObb" app and run it (allow access to all files and install from unknown sources)
+    * If the app doesn't work on your device, you can patch the OBB file on Windows. See [#505](https://github.com/zoffline/zwift-offline/issues/505) for details.
   * Wait for process to finish (5-10min)
   * Run Zwift, hopefully it verifies download and runs
 * Play Zwift:
