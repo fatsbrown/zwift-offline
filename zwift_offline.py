@@ -4517,9 +4517,18 @@ def api_player_profile_user_game_storage_attributes():
         return '', 202
     ret = user_storage_pb2.UserStorage()
     for n in request.args.getlist('n'):
-        for a in user_storage.attributes:
-            if int(n) in a.DESCRIPTOR.fields_by_number and a.HasField(a.DESCRIPTOR.fields_by_number[int(n)].name):
-                ret.attributes.add().CopyFrom(a)
+        if n == '24' and os.path.isfile('%s/unlock_bike_upgrades.txt' % STORAGE_DIR):
+            for signature in GD['bikeframes'] | GD['bikeframesextra']:
+                a = ret.attributes.add()
+                a.bike_progress.signature = str(signature)
+                a.bike_progress.level = 5
+                a.bike_progress.percentage = 1.0
+                a.bike_progress.last_upgrade = int(time.time() * 1000)
+                a.bike_progress.time = int(time.time() * 1000)
+        else:
+            for a in user_storage.attributes:
+                if int(n) in a.DESCRIPTOR.fields_by_number and a.HasField(a.DESCRIPTOR.fields_by_number[int(n)].name):
+                    ret.attributes.add().CopyFrom(a)
     return ret.SerializeToString(), 200
 
 

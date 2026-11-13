@@ -34,11 +34,15 @@ gd['runshirts'] = [int(x.get('signature')) for x in root.findall("./RUNSHIRTS/RU
 gd['runshorts'] = [int(x.get('signature')) for x in root.findall("./RUNSHORTS/RUNSHORT")]
 gd['runshoes'] = [int(x.get('signature')) for x in root.findall("./RUNSHOES/RUNSHOE")]
 bikeframes = {}
+bikeframesextra = {}
 for x in root.findall("./BIKEFRAMES/BIKEFRAME"):
     signature = int(x.get('signature'))
-    if not signature in frame_exceptions:
+    if signature in frame_exceptions:
+        bikeframesextra[signature] = x.get('name')
+    else:
         bikeframes[signature] = x.get('name')
 gd['bikeframes'] = bikeframes
+gd['bikeframesextra'] = bikeframesextra
 achievements = {}
 for x in root.findall("./ACHIEVEMENTS/ACHIEVEMENT"):
     if x.get('imageName') == "RouteComplete":

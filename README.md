@@ -394,6 +394,7 @@ To enable support for IPv6 set the environment variable ``ZOFFLINE_SERVER_HOST``
 
 * To unlock entitlements (special equipment), create a file ``unlock_entitlements.txt`` in the ``storage`` directory.
 * To unlock all equipment, create a file ``unlock_all_equipment.txt`` instead.
+* To unlock bike upgrades, create a file ``unlock_bike_upgrades.txt``.
 </details>
 
 <details><summary>CDN proxy</summary>
