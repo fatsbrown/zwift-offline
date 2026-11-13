@@ -5107,10 +5107,12 @@ def run_standalone(passed_online, passed_global_relay, passed_global_pace_partne
     use_cert = os.environ.get('ZOFFLINE_API_USE_CERT', 'true').lower() == 'true'
     if host != SERVER_HOST or port != 443 or not use_cert:
         logger.info("Listening on %s:%d using certificate: %s", host, port, use_cert)
-    context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+    wsgi_args = {}
     if use_cert:
+        context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
         context.load_cert_chain(certfile='%s/cert-zwift-com.pem' % SSL_DIR, keyfile='%s/key-zwift-com.pem' % SSL_DIR)
-    server = CleanWSGIServer((host, port), app, log=logger, ssl_context=context)
+        wsgi_args['ssl_context'] = context
+    server = CleanWSGIServer((host, port), app, log=logger, **wsgi_args)
     server.serve_forever()
 
 #    app.run(ssl_context=('%s/cert-zwift-com.pem' % SSL_DIR, '%s/key-zwift-com.pem' % SSL_DIR), port=443, threaded=True, host=SERVER_HOST) # debug=True, use_reload=False)
