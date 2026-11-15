@@ -6,6 +6,9 @@ zoffline also offers riding against ghosts (your previous rides). Enable this fe
 
 Additionally, zoffline's launcher allows selecting a specific map to ride on without mucking about with config files.
 
+# Deprecated
+This project is now deprecated and is without a maintainer. @fatsbrown has forked it and is currently keeping it up to date. Use his releases: https://github.com/fatsbrown/zwift-offline
+
 ## Install
 
 Setting up zoffline requires two primary steps. First, zoffline must be installed and run on a system before running Zwift (either on the system running Zwift or on another locally networked system).  Second, Zwift must be configured to use zoffline instead of the official Zwift server.
@@ -420,6 +423,35 @@ To enable support for IPv6 set the environment variable ``ZOFFLINE_SERVER_HOST``
   ```
 </details>
 
+<details><summary>Matrix bridge</summary>
+
+* Create a ``matrix.txt`` file in the ``storage`` directory containing four lines:
+  ```
+  https://matrix.example.org
+  @zoffline:matrix.example.org
+  password
+  !roomid:matrix.example.org
+  ```
+  The values are the homeserver URL (or hostname), bot user, password and room ID
+  (or room alias).
+* The bot user must already be in the room, or be invited so it can join automatically.
+* Optional lines can be added after the first four:
+  ```
+  announce_players = false
+  help_message = Commands: !online, !ping, !help
+  ```
+* Matrix commands are ``!online``, ``!ping`` and ``!help``. Other room messages are
+  relayed to in-game chat, and in-game chat is relayed to the room.
+* The Matrix bridge requires Python 3.10 or newer.
+* Encrypted rooms are supported by ``matrix-nio[e2e]`` (installed with the requirements).
+  Other Matrix clients must share the room keys with the bot device. The bridge does not
+  support cross-signing or key backup, so clients that require cross-signed devices may
+  need to be configured to allow sharing keys with the bot.
+* The session and encryption state are stored in ``storage/matrix-session.json`` and
+  ``storage/matrix-store``. Keep these files to avoid logging in as a new device and
+  losing access to encrypted messages.
+</details>
+
 ## Community Discord server and Strava club
 
 Please join the community supported [Discord](https://discord.gg/GMdn8F8) server and [Strava](https://www.strava.com/clubs/zoffline) club.
@@ -443,6 +475,7 @@ Docker
 * stravalib (https://stravalib.readthedocs.io/)
 * OPTIONAL: garth (https://pypi.org/project/garth/)
 * OPTIONAL: discord.py (https://discordpy.readthedocs.io/)
+* OPTIONAL: matrix_bot.py and matrix-nio[e2e] for the Matrix bridge (https://matrix-nio.readthedocs.io/)
 
 
 ## Note
