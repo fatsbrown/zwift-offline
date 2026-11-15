@@ -5,14 +5,13 @@ block_cipher = None
 import sys
 sys.modules['FixTk'] = None
 import xml.etree.ElementTree as ET
-from PyInstaller.utils.hooks import collect_submodules
 version = ET.parse('cdn/gameassets/Zwift_Updates_Root/Zwift_ver_cur.xml').getroot().get('version')
 
 a = Analysis(['standalone.py'],
              pathex=['protobuf'],
              binaries=[],
              datas=[('ssl/*', 'ssl'), ('data/*', 'data')],
-             hiddenimports=collect_submodules('nio'),
+             hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
              excludes=['FixTk', 'tcl', 'tk', '_tkinter', 'tkinter', 'Tkinter', 'pkg_resources'],

@@ -97,8 +97,11 @@ class ChatBridges():
 
 chat_bridges = []
 if os.path.isfile(DISCORD_CONFIG_FILE):
-    from discord_bot import DiscordThread
-    chat_bridges.append(DiscordThread(DISCORD_CONFIG_FILE))
+    try:
+        from discord_bot import DiscordThread
+        chat_bridges.append(DiscordThread(DISCORD_CONFIG_FILE))
+    except Exception as exc:
+        print('Discord bridge disabled: %s' % repr(exc))
 if os.path.isfile(MATRIX_CONFIG_FILE):
     try:
         from matrix_bot import MatrixThread

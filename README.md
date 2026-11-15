@@ -6,9 +6,6 @@ zoffline also offers riding against ghosts (your previous rides). Enable this fe
 
 Additionally, zoffline's launcher allows selecting a specific map to ride on without mucking about with config files.
 
-# Deprecated
-This project is now deprecated and is without a maintainer. @fatsbrown has forked it and is currently keeping it up to date. Use his releases: https://github.com/fatsbrown/zwift-offline
-
 ## Install
 
 Setting up zoffline requires two primary steps. First, zoffline must be installed and run on a system before running Zwift (either on the system running Zwift or on another locally networked system).  Second, Zwift must be configured to use zoffline instead of the official Zwift server.
@@ -425,6 +422,8 @@ To enable support for IPv6 set the environment variable ``ZOFFLINE_SERVER_HOST``
 
 <details><summary>Matrix bridge</summary>
 
+* The Matrix bridge is only available if zoffline is running from source.
+* Install matrix-nio: ``pip3 install matrix-nio``
 * Create a ``matrix.txt`` file in the ``storage`` directory containing four lines:
   ```
   https://matrix.example.org
@@ -443,7 +442,7 @@ To enable support for IPv6 set the environment variable ``ZOFFLINE_SERVER_HOST``
 * Matrix commands are ``!online``, ``!ping`` and ``!help``. Other room messages are
   relayed to in-game chat, and in-game chat is relayed to the room.
 * The Matrix bridge requires Python 3.10 or newer.
-* Encrypted rooms are supported by ``matrix-nio[e2e]`` (installed with the requirements).
+* Encrypted rooms are supported by ``matrix-nio[e2e]``.
   Other Matrix clients must share the room keys with the bot device. The bridge does not
   support cross-signing or key backup, so clients that require cross-signed devices may
   need to be configured to allow sharing keys with the bot.
@@ -475,7 +474,7 @@ Docker
 * stravalib (https://stravalib.readthedocs.io/)
 * OPTIONAL: garth (https://pypi.org/project/garth/)
 * OPTIONAL: discord.py (https://discordpy.readthedocs.io/)
-* OPTIONAL: matrix_bot.py and matrix-nio[e2e] for the Matrix bridge (https://matrix-nio.readthedocs.io/)
+* OPTIONAL: matrix-nio (https://matrix-nio.readthedocs.io/)
 
 
 ## Note
