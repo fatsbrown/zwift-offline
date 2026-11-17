@@ -610,8 +610,9 @@ class BlobRider:
 class SoloBlob:
     """A live group riding around one local player (the anchor)."""
 
-    def __init__(self, player_id, index, config, names, game_dictionary, logger=None):
+    def __init__(self, player_id, ftp, index, config, names, game_dictionary, logger=None):
         self.player_id = player_id
+        self.ftp = ftp
         self.index = index
         self.config = dict(DEFAULT_CONFIG)
         self.config.update(config or {})
@@ -813,6 +814,7 @@ class SoloBlob:
         profile.country_code = name.get('country_code') or 804
         profile.weight_in_grams = round(rng.uniform(62, 86) * 1000)
         profile.height_in_millimeters = round(rng.uniform(165, 192) * 10)
+        profile.ftp = self.ftp
         try:
             profile.ride_helmet_type = rng.choice(gd['headgears'])
             profile.glasses_type = rng.choice(gd['glasses'])
@@ -1710,7 +1712,14 @@ class SoloBlobManager:
                         names = self.names_provider() or []
                     except Exception as exc:
                         self.logger.warning('[SoloBlob] names provider: %s' % repr(exc))
-                    self.blobs[anchor] = SoloBlob(anchor, 0, entry, names, self.game_dictionary, self.logger)
+                    profile = profile_pb2.PlayerProfile()
+                    try:
+                        with open('%s/%s/profile.bin' % (self.storage_dir, anchor), 'rb') as f:
+                            profile.ParseFromString(f.read())
+                    except:
+                        pass
+                    ftp = profile.ftp or 300
+                    self.blobs[anchor] = SoloBlob(anchor, ftp, 0, entry, names, self.game_dictionary, self.logger)
                     self.logger.info('[SoloBlob] load - %d rider(s) around player %d'
                                     % (entry['riders'], anchor))
                     return

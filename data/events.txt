@@ -373,7 +373,7 @@
   {
     "name": "Watopia - Three Sisters Reverse",
     "route": 4263172118,
-    "distance": 45892.8,
+    "distance": 45879.9,
     "course": 6,
     "sport": 0
   },
@@ -441,7 +441,7 @@
     "sport": 0
   },
   {
-    "name": "Yorkshire - Harrogate Circuit Reverse",
+    "name": "Yorkshire Circuit Reverse",
     "route": 620436060,
     "distance": 13855.2,
     "course": 11,

@@ -159,11 +159,6 @@
     "road": 0,
     "time": 655000
   },
-  "-1180363988": {
-    "name": "Innsbruck - 2018 Worlds Short Lap",
-    "road": 7,
-    "time": 157534
-  },
   "-285732192": {
     "name": "Innsbruck - Achterbahn",
     "road": 7,
@@ -171,6 +166,11 @@
   },
   "-645620046": {
     "name": "Innsbruck - Innsbruck KOM After Party",
+    "road": 7,
+    "time": 157534
+  },
+  "-1180363988": {
+    "name": "Innsbruck - Innsbruck Short Lap",
     "road": 7,
     "time": 157534
   },
@@ -899,11 +899,6 @@
     "road": 0,
     "time": 485874
   },
-  "-2098947784": {
-    "name": "Richmond - 2015 Worlds Course",
-    "road": 0,
-    "time": 996995
-  },
   "1545087483": {
     "name": "Richmond - Cobbled Climbs",
     "road": 0,
@@ -929,8 +924,13 @@
     "road": 0,
     "time": 997004
   },
+  "-2098947784": {
+    "name": "Richmond - Richmond Circuit",
+    "road": 0,
+    "time": 996995
+  },
   "1039983620": {
-    "name": "Richmond - Richmond 2015 Worlds Reverse",
+    "name": "Richmond - Richmond Circuit Reverse",
     "road": 0,
     "time": 977981
   },
@@ -2004,20 +2004,10 @@
     "road": 0,
     "time": 987894
   },
-  "2007026433": {
-    "name": "Yorkshire - 2019 Worlds Harrogate Circuit",
-    "road": 0,
-    "time": 5069
-  },
   "1233527301": {
     "name": "Yorkshire - Duchy Estate",
     "road": 0,
     "time": 718670
-  },
-  "620436060": {
-    "name": "Yorkshire - Harrogate Circuit Reverse",
-    "road": 0,
-    "time": 1000542
   },
   "-1287700625": {
     "name": "Yorkshire - Queen's Highway",
@@ -2043,6 +2033,16 @@
     "name": "Yorkshire - Tour Of Tewit Well",
     "road": 0,
     "time": 1000376
+  },
+  "2007026433": {
+    "name": "Yorkshire - Yorkshire Circuit",
+    "road": 0,
+    "time": 5069
+  },
+  "620436060": {
+    "name": "Yorkshire - Yorkshire Circuit Reverse",
+    "road": 0,
+    "time": 1000542
   },
   "1788218813": {
     "name": "Yorkshire - Yorkshire Double Loop",

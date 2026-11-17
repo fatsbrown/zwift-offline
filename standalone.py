@@ -497,6 +497,7 @@ def load_pace_partners():
                 with open(profile, 'rb') as fd:
                     p = profile_pb2.PlayerProfile()
                     p.ParseFromString(fd.read())
+                    p.ftp = 400
                     global_pace_partners[p.id] = BotVariables()
                     pp = global_pace_partners[p.id]
                     pp.profile = p
@@ -543,6 +544,12 @@ def load_bots():
     i = 1
     loop_riders = []
     for name in os.listdir(STORAGE_DIR):
+        profile = profile_pb2.PlayerProfile()
+        try:
+            with open('%s/%s/profile.bin' % (STORAGE_DIR, name), 'rb') as f:
+                profile.ParseFromString(f.read())
+        except:
+            pass
         path = '%s/%s/ghosts' % (STORAGE_DIR, name)
         if os.path.isdir(path):
             for (root, dirs, files) in os.walk(path):
@@ -553,6 +560,8 @@ def load_bots():
                             p = profile_pb2.PlayerProfile()
                             zo.random_equipment(p)
                             p.id = i + 1000000 + n * 10000
+                            p.ftp = profile.ftp or 300
+                            p.weight_in_grams = profile.weight_in_grams or 80000
                             global_bots[p.id] = BotVariables()
                             bot = global_bots[p.id]
                             if n == 0:

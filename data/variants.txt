@@ -149,6 +149,9 @@
       }
     },
     {
+      "name": "ftp_estimate_v3"
+    },
+    {
       "name": "game_101_hud_ncgb"
     },
     {
@@ -172,10 +175,6 @@
           }
         }
       }
-    },
-    {
-      "name": "game_1_100_pairing_screen_connection_status",
-      "value": true
     },
     {
       "name": "game_1_100_retry_on_corrupt_image",
@@ -228,9 +227,6 @@
       "value": true,
       "values": {
         "fields": {
-          "activity_start_scan_timeout_seconds": {
-            "varintValue": "0"
-          },
           "not_all_devices_found_display_delay_ms": {
             "varintValue": "30000"
           },
@@ -394,7 +390,7 @@
       "values": {
         "fields": {
           "cache_gear_selection": {
-            "boolValue": false
+            "boolValue": true
           },
           "display_locked_value": {
             "boolValue": true
@@ -508,6 +504,9 @@
         "fields": {
           "change_plan_left_content_image_url": {
             "stringValue": "https://content-cdn.zwift.com/paywall_images/zwift-plus_trial_interstitial_2x.png"
+          },
+          "force_sync_error_codes": {
+            "stringValue": "[\"SUB-202\", \"SUB-907\", \"SUB-301\", \"SUB-303\", \"SUB-905\"]"
           },
           "is_change_plan_action_enabled": {
             "boolValue": true
@@ -657,22 +656,50 @@
       }
     },
     {
-      "name": "game_1_124_any_point_route_completion"
+      "name": "game_1_124_any_point_route_completion",
+      "value": true,
+      "values": {
+        "fields": {
+          "route_profile_adjustment_enabled": {
+            "boolValue": true
+          }
+        }
+      }
     },
     {
       "name": "game_1_124_debounce_recommendations_wa"
     },
     {
-      "name": "game_1_124_disable_middleware_reconnect"
+      "name": "game_1_124_disable_middleware_reconnect",
+      "value": true
     },
     {
-      "name": "game_1_124_garage_when_moving"
+      "name": "game_1_124_garage_when_moving",
+      "value": true,
+      "values": {
+        "fields": {
+          "allow_dropshop_too": {
+            "boolValue": true
+          },
+          "max_speed_kph": {
+            "numberValue": 1000.001
+          }
+        }
+      }
     },
     {
       "name": "game_1_124_tymewear_vital_pro"
     },
     {
-      "name": "game_1_125_cmp_shf_sty"
+      "name": "game_1_125_auto_connection_manager",
+      "value": true
+    },
+    {
+      "name": "game_1_125_cmp_shf_sty",
+      "value": true
+    },
+    {
+      "name": "game_1_125_disable_high_res_spline_distance"
     },
     {
       "name": "game_1_125_mochi_favor_center_riding"
@@ -697,12 +724,62 @@
       "name": "game_1_125_mochi_windows_hitch_fix"
     },
     {
+      "name": "game_1_125_nameplates_behind_improvements"
+    },
+    {
       "name": "game_1_125_route_profile_pin_wrap_fix",
       "value": true
     },
     {
+      "name": "game_1_125_workouts_ui_optimization"
+    },
+    {
+      "name": "game_1_126_0_center_hud_message_refactor"
+    },
+    {
       "name": "game_1_126_ftms3_send_and_scan",
       "value": true
+    },
+    {
+      "name": "game_1_126_hide_profile_tutorial_menu_item"
+    },
+    {
+      "name": "game_1_126_mochi_camera_smoothing_option"
+    },
+    {
+      "name": "game_1_126_mochi_emoji_fix"
+    },
+    {
+      "name": "game_1_126_mochi_extend_autosteer_delay"
+    },
+    {
+      "name": "game_1_126_mochi_first_person",
+      "value": true
+    },
+    {
+      "name": "game_1_126_mochi_loop_rider_fix"
+    },
+    {
+      "name": "game_1_126_mochi_low_bandwidth_warning"
+    },
+    {
+      "name": "game_1_126_mochi_narrow_road_sliding_fix"
+    },
+    {
+      "name": "game_1_126_mochi_nonplus_fallback_rendering",
+      "value": true
+    },
+    {
+      "name": "game_1_126_mochi_persistent_transition_toasts"
+    },
+    {
+      "name": "game_1_126_mochi_route_complete_notable_moment_fix"
+    },
+    {
+      "name": "game_1_126_mochi_show_hairpin_bumpers"
+    },
+    {
+      "name": "game_1_126_steering_tutorial_repack_rush"
     },
     {
       "name": "game_1_17_noesis_enabled",
@@ -1034,7 +1111,7 @@
             "varintValue": "104857600"
           },
           "memory_cache_max_size_bytes": {
-            "varintValue": "104857600"
+            "varintValue": "67108864"
           }
         }
       }
@@ -1058,7 +1135,7 @@
       "values": {
         "fields": {
           "hero_carousel_id": {
-            "stringValue": "home_page_hero_carousel_124"
+            "stringValue": "home_page_hero_carousel_125"
           }
         }
       }
@@ -1128,17 +1205,13 @@
       "values": {
         "fields": {
           "challenge_carousel_id": {
-            "stringValue": "prod_home_challenge_carousel_124"
+            "stringValue": "prod_home_challenge_carousel_125"
           }
         }
       }
     },
     {
       "name": "game_1_71_csos"
-    },
-    {
-      "name": "game_1_72_fence_test_2024_08",
-      "value": true
     },
     {
       "name": "game_1_75_bypass_zpe"
@@ -1152,10 +1225,6 @@
     },
     {
       "name": "game_1_77_ttt_team_car_shows_znl_when_fanviewing",
-      "value": true
-    },
-    {
-      "name": "game_1_79_category_enforcement_event_join",
       "value": true
     },
     {
@@ -1286,9 +1355,6 @@
     {
       "name": "game_1_98_aup",
       "value": true
-    },
-    {
-      "name": "game_1_98_prevent_creation_zp_controller_sensor_relay_sensor"
     },
     {
       "name": "game_1_98_soft_delete_activity"
@@ -1468,6 +1534,10 @@
       "name": "game_android_perf_testing"
     },
     {
+      "name": "game_android_use_vendored_glsurfaceview",
+      "value": true
+    },
+    {
       "name": "game_aup_branch",
       "value": true,
       "values": {
@@ -1527,14 +1597,7 @@
     },
     {
       "name": "game_default_deco",
-      "value": true,
-      "values": {
-        "fields": {
-          "world1": {
-            "stringValue": "tourofwatopia2026"
-          }
-        }
-      }
+      "value": true
     },
     {
       "name": "game_disable_end_ride_delete_snapshot_fix"
@@ -1557,7 +1620,7 @@
             "stringValue": "dlc_asset"
           },
           "build_id": {
-            "stringValue": "168119"
+            "stringValue": "168765"
           },
           "canary_test": {
             "boolValue": true
@@ -1670,6 +1733,9 @@
             "stringValue": "{\"manifest_folder\":\"watopian\",\"manifests\":[{\"key\":\"watopian.manifest.json\"}]}"
           },
           "download_all_before_start": {
+            "boolValue": true
+          },
+          "enable_video_codec_capability_checks": {
             "boolValue": true
           },
           "entitlement_mode": {
@@ -1825,7 +1891,7 @@
       "values": {
         "fields": {
           "version": {
-            "stringValue": "1.125.0"
+            "stringValue": "1.126.0"
           }
         }
       }
@@ -1842,10 +1908,6 @@
     },
     {
       "name": "game_spatial_frame_time_telemetry",
-      "value": true
-    },
-    {
-      "name": "game_staged_quest_rewards_ui",
       "value": true
     },
     {
@@ -2077,7 +2139,8 @@
       "value": true
     },
     {
-      "name": "quest_goal_specific_milestones"
+      "name": "quest_goal_specific_milestones",
+      "value": true
     },
     {
       "name": "quest_progress_view_extra_rewards",
