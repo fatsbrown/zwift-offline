@@ -1360,7 +1360,7 @@ def send_restarting_message():
         if restarting and restarting_in_minutes == 0:
             message = 'See you later! Look for the back online message.'
             send_message(message)
-            discord.send_message(message)
+            chat_bridges.send_message(message)
             time.sleep(6)
             os.system("sudo systemctl restart zoffline.service")
 
@@ -1375,7 +1375,7 @@ def restart_server():
         restarting_in_minutes = 10
         send_restarting_message_thread = threading.Thread(target=send_restarting_message)
         send_restarting_message_thread.start()
-        discord.send_message('Restarting / Shutting down in %s minutes. Save your progress or continue riding until server is back online' % restarting_in_minutes)
+        chat_bridges.send_message('Restarting / Shutting down in %s minutes. Save your progress or continue riding until server is back online' % restarting_in_minutes)
         p = subprocess.Popen(["git", "pull"], cwd="/home/ubuntu/zwift-offline")
         p.wait()
     return redirect(url_for('user_home', username=current_user.username))
@@ -1391,7 +1391,7 @@ def cancel_restart_server():
         restarting_in_minutes = 0
         message = 'Restart of the server has been cancelled. Ride on!'
         send_message(message)
-        discord.send_message(message)
+        chat_bridges.send_message(message)
     return redirect(url_for('user_home', username=current_user.username))
 
 
@@ -3016,7 +3016,7 @@ def api_profiles_activities_rideon(receiving_player_id):
 
     receiver = get_partial_profile(receiving_player_id)
     message = 'Ride on ' + receiver.first_name + ' ' + receiver.last_name + '!'
-    discord.send_message(message, sending_player_id)
+    chat_bridges.send_message(message, sending_player_id)
     return '{}', 200
 
 def stime_to_timestamp(stime):
@@ -3948,7 +3948,7 @@ def relay_worlds_attributes():
                 else:
                     send_message('Invalid command: %s' % command, recipients=[chat_message.player_id])
                 return '', 201
-        discord.send_message(chat_message.message, chat_message.player_id)
+        chat_bridges.send_message(chat_message.message, chat_message.player_id)
     # gestures (elbow flick, hammer, toast, bell) steer the solo blob group
     if player_update.wa_type == udp_node_msgs_pb2.WA_TYPE.WAT_B_ACT and solo_blob_manager:
         reply = solo_blob_manager.on_raw_gesture(current_user.player_id, player_update.payload)
@@ -4466,9 +4466,18 @@ def api_player_profile_user_game_storage_attributes():
         return '', 202
     ret = user_storage_pb2.UserStorage()
     for n in request.args.getlist('n'):
-        for a in user_storage.attributes:
-            if int(n) in a.DESCRIPTOR.fields_by_number and a.HasField(a.DESCRIPTOR.fields_by_number[int(n)].name):
-                ret.attributes.add().CopyFrom(a)
+        if n == '24' and os.path.isfile('%s/unlock_bike_upgrades.txt' % STORAGE_DIR):
+            for signature in GD['bikeframes'] | GD['bikeframesextra']:
+                a = ret.attributes.add()
+                a.bike_progress.signature = str(signature)
+                a.bike_progress.level = 5
+                a.bike_progress.percentage = 1.0
+                a.bike_progress.last_upgrade = int(time.time() * 1000)
+                a.bike_progress.time = int(time.time() * 1000)
+        else:
+            for a in user_storage.attributes:
+                if int(n) in a.DESCRIPTOR.fields_by_number and a.HasField(a.DESCRIPTOR.fields_by_number[int(n)].name):
+                    ret.attributes.add().CopyFrom(a)
     return ret.SerializeToString(), 200
 
 
@@ -4833,7 +4842,7 @@ def send_server_back_online_message():
     time.sleep(30)
     message = "Server version %s is back online. Ride on!" % ZWIFT_VER_CUR
     send_message(message)
-    discord.send_message(message)
+    chat_bridges.send_message(message)
 
 def remove_inactive():
     while True:
@@ -5002,14 +5011,14 @@ class CleanWSGIServer(WSGIServer):
             logger.warning('WSGIServer: connection reset by client (missing certificate in cacert.pem?)')
 
 
-def run_standalone(passed_online, passed_global_relay, passed_global_pace_partners, passed_global_bots, passed_global_ghosts, passed_regroup_ghosts, passed_discord):
+def run_standalone(passed_online, passed_global_relay, passed_global_pace_partners, passed_global_bots, passed_global_ghosts, passed_regroup_ghosts, passed_chat_bridges):
     global online
     global global_relay
     global global_pace_partners
     global global_bots
     global global_ghosts
     global regroup_ghosts
-    global discord
+    global chat_bridges
     global login_manager
     online = passed_online
     global_relay = passed_global_relay
@@ -5017,7 +5026,7 @@ def run_standalone(passed_online, passed_global_relay, passed_global_pace_partne
     global_bots = passed_global_bots
     global_ghosts = passed_global_ghosts
     regroup_ghosts = passed_regroup_ghosts
-    discord = passed_discord
+    chat_bridges = passed_chat_bridges
     login_manager = LoginManager()
     login_manager.login_view = 'login'
     login_manager.session_protection = None
@@ -5056,10 +5065,12 @@ def run_standalone(passed_online, passed_global_relay, passed_global_pace_partne
     use_cert = os.environ.get('ZOFFLINE_API_USE_CERT', 'true').lower() == 'true'
     if host != SERVER_HOST or port != 443 or not use_cert:
         logger.info("Listening on %s:%d using certificate: %s", host, port, use_cert)
-    context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+    wsgi_args = {}
     if use_cert:
+        context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
         context.load_cert_chain(certfile='%s/cert-zwift-com.pem' % SSL_DIR, keyfile='%s/key-zwift-com.pem' % SSL_DIR)
-    server = CleanWSGIServer((host, port), app, log=logger, ssl_context=context)
+        wsgi_args['ssl_context'] = context
+    server = CleanWSGIServer((host, port), app, log=logger, **wsgi_args)
     server.serve_forever()
 
 #    app.run(ssl_context=('%s/cert-zwift-com.pem' % SSL_DIR, '%s/key-zwift-com.pem' % SSL_DIR), port=443, threaded=True, host=SERVER_HOST) # debug=True, use_reload=False)

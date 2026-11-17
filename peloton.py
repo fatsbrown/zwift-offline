@@ -267,6 +267,7 @@ class Peloton:
                              hr_rest=rng.uniform(52, 66),
                              hr_max=float(spec.get('max_heart_rate', rng.uniform(176, 196))))
         rider.ftp_watts = self.pacer_average_wkg / PACER_INTENSITY_OF_FTP * rider.strength * weight_kg
+        rider.profile.ftp = int(rider.ftp_watts)
         return rider
 
     def _random_equipment(self, profile):

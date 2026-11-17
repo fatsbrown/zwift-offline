@@ -62,7 +62,7 @@ to generate your own certificates and do the same.
 <details><summary>Android (non-rooted device)</summary>
 
 * Install required apps:
-  * Download and install ``ZofflineObb.apk`` from [here](https://github.com/Argon2000/ZofflineObbAndroid/releases/latest)
+  * Download and install ``ZofflineObb.apk`` from [here](https://github.com/fatsbrown/ZofflineObbAndroid/releases/latest)
   * Download and install ``app-Github-release.apk`` from [here](https://github.com/x-falcon/Virtual-Hosts/releases/latest)
   * Create a `hosts.txt` file to use with the app (you could use a text editor app or create it online with an online tool such as [this](https://passwordsgenerator.net/text-editor/)). The file must look like this (replace ``<zoffline ip>`` with the IP address of the machine running zoffline):
     ```
@@ -77,8 +77,8 @@ to generate your own certificates and do the same.
 * Patch after every installation or update:
   * Install/update Zwift from Google play, but do not start it yet.
     * If you have already started it go to `Android Settings > Applications > Zwift` and clear data or uninstall and reinstall the app.
-  * __NOTE:__ ZofflineObb doesn't work on Android 15 and later versions. As a workaround, you can patch the OBB file on Windows. See [#505](https://github.com/zoffline/zwift-offline/issues/505) for details.
-  * Open the `ZofflineObb` app and run it (allow access to storage)
+  * Open the "ZofflineObb" app and run it (allow access to all files and install from unknown sources)
+    * If the app doesn't work on your device, you can patch the OBB file on Windows. See [#505](https://github.com/zoffline/zwift-offline/issues/505) for details.
   * Wait for process to finish (5-10min)
   * Run Zwift, hopefully it verifies download and runs
 * Play Zwift:
@@ -319,6 +319,7 @@ To enable support for IPv6 set the environment variable ``ZOFFLINE_SERVER_HOST``
 
 * To unlock entitlements (special equipment), create a file ``unlock_entitlements.txt`` in the ``storage`` directory.
 * To unlock all equipment, create a file ``unlock_all_equipment.txt`` instead.
+* To unlock bike upgrades, create a file ``unlock_bike_upgrades.txt``.
 </details>
 
 <details><summary>CDN proxy</summary>
@@ -344,6 +345,37 @@ To enable support for IPv6 set the environment variable ``ZOFFLINE_SERVER_HOST``
   ```
 </details>
 
+<details><summary>Matrix bridge</summary>
+
+* The Matrix bridge is only available if zoffline is running from source.
+* Install matrix-nio: ``pip3 install matrix-nio``
+* Create a ``matrix.txt`` file in the ``storage`` directory containing four lines:
+  ```
+  https://matrix.example.org
+  @zoffline:matrix.example.org
+  password
+  !roomid:matrix.example.org
+  ```
+  The values are the homeserver URL (or hostname), bot user, password and room ID
+  (or room alias).
+* The bot user must already be in the room, or be invited so it can join automatically.
+* Optional lines can be added after the first four:
+  ```
+  announce_players = false
+  help_message = Commands: !online, !ping, !help
+  ```
+* Matrix commands are ``!online``, ``!ping`` and ``!help``. Other room messages are
+  relayed to in-game chat, and in-game chat is relayed to the room.
+* The Matrix bridge requires Python 3.10 or newer.
+* Encrypted rooms are supported by ``matrix-nio[e2e]``.
+  Other Matrix clients must share the room keys with the bot device. The bridge does not
+  support cross-signing or key backup, so clients that require cross-signed devices may
+  need to be configured to allow sharing keys with the bot.
+* The session and encryption state are stored in ``storage/matrix-session.json`` and
+  ``storage/matrix-store``. Keep these files to avoid logging in as a new device and
+  losing access to encrypted messages.
+</details>
+
 ## Community Discord server and Strava club
 
 Please join the community supported [Discord](https://discord.gg/GMdn8F8) server and [Strava](https://www.strava.com/clubs/zoffline) club.
@@ -367,6 +399,7 @@ Docker
 * stravalib (https://stravalib.readthedocs.io/)
 * OPTIONAL: garth (https://pypi.org/project/garth/)
 * OPTIONAL: discord.py (https://discordpy.readthedocs.io/)
+* OPTIONAL: matrix-nio (https://matrix-nio.readthedocs.io/)
 
 
 ## Note
